@@ -1,0 +1,29 @@
+Booking System:
+	Add new customer function sa agent nga system
+		-downloadable
+		-send to main system
+	Add daun signature function sa agent system
+	add uom sa per sku and sku type dadto sa work flow summary
+	so for new customer indicate for approval and then COD ang mode of transaction
+	okay ang partial payment pero dili na maka serve dependi japon sa allowable sales order ni customer
+	customer discount per principal dapat ma upload sa agent system
+	dapat last visit ang date nga gamiton dili date delivered
+	
+	
+
+Mainn System
+	special account column
+	enable disable
+	mode of transaction
+	-new customer mode of transaction is COD
+	upload new customer function
+
+
+To Dos:	
+	Collect actual invoice with discount from all principals
+	Memo next week meeting with all supervisors 9am to 10am 
+	
+	
+
+
+	
