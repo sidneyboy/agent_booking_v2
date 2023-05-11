@@ -315,7 +315,7 @@
                                 alt="User Image">
                         </div>
                         <div class="info">
-                            <a href="#" class="d-block">{{ $agent_user->name }}</a>
+                            <a href="#" class="d-block">{{ $agent_user->agent_name }}</a>
                         </div>
                     </div>
                     <!-- Sidebar Menu -->
@@ -323,7 +323,7 @@
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                             data-accordion="false">
                             <!-- Add icons to the links using the .nav-icon class
-                                                              with font-awesome or any other icon font library -->
+                                                                          with font-awesome or any other icon font library -->
 
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
@@ -336,11 +336,38 @@
                                 </a>
                                 <ul class="nav nav-treeview">
                                     <li class="nav-item">
+                                        <a href="{{ url('location_upload') }}"
+                                            class="nav-link {{ $active == 'location_upload' ? 'active' : '' }}">
+                                            <i class="nav-icon fas fa-solid fa-arrow-right"></i>
+                                            <p>
+                                                Location
+                                            </p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ url('principal_upload') }}"
+                                            class="nav-link {{ $active == 'principal_upload' ? 'active' : '' }}">
+                                            <i class="nav-icon fas fa-solid fa-arrow-right"></i>
+                                            <p>
+                                                Principal
+                                            </p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
                                         <a href="{{ url('customer_upload') }}"
                                             class="nav-link {{ $active == 'customer_upload' ? 'active' : '' }}">
                                             <i class="nav-icon fas fa-solid fa-arrow-right"></i>
                                             <p>
                                                 Customer
+                                            </p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ url('customer_principal_price_upload') }}"
+                                            class="nav-link {{ $active == 'customer_principal_price_upload' ? 'active' : '' }}">
+                                            <i class="nav-icon fas fa-solid fa-arrow-right"></i>
+                                            <p>
+                                                Customer Price Level 
                                             </p>
                                         </a>
                                     </li>
@@ -377,7 +404,7 @@
                                     <li class="nav-item">
                                         <a href="{{ url('new_customer_generate_csv') }}"
                                             class="nav-link {{ $active == 'new_customer_generate_csv' ? 'active' : '' }}">
-                                             <i class="nav-icon fas fa-solid fa-arrow-right"></i>
+                                            <i class="nav-icon fas fa-solid fa-arrow-right"></i>
                                             <p>
                                                 Customer
                                             </p>
@@ -387,7 +414,7 @@
                                     <li class="nav-item">
                                         <a href="{{ url('sales_order_export') }}"
                                             class="nav-link {{ $active == 'sales_order_export' ? 'active' : '' }}">
-                                             <i class="nav-icon fas fa-solid fa-arrow-right"></i>
+                                            <i class="nav-icon fas fa-solid fa-arrow-right"></i>
                                             <p>
                                                 Sales Order
                                             </p>
@@ -434,7 +461,7 @@
                             <li class="nav-item">
                                 <a href="{{ url('new_customer') }}"
                                     class="nav-link {{ $active == 'new_customer' ? 'active' : '' }}">
-                                     <i class="nav-icon fas fa-solid fa-arrow-right"></i>
+                                    <i class="nav-icon fas fa-solid fa-arrow-right"></i>
                                     <p>
                                         New Customer
                                     </p>
@@ -444,7 +471,7 @@
                             <li class="nav-item">
                                 <a href="{{ url('update_customer') }}"
                                     class="nav-link {{ $active == 'update_customer' ? 'active' : '' }}">
-                                     <i class="nav-icon fas fa-solid fa-arrow-right"></i>
+                                    <i class="nav-icon fas fa-solid fa-arrow-right"></i>
                                     <p>
                                         Update Customer
                                     </p>
@@ -456,7 +483,7 @@
                             <li class="nav-item">
                                 <a href="{{ url('work_flow') }}"
                                     class="nav-link {{ $active == 'work_flow' ? 'active' : '' }}">
-                                     <i class="nav-icon fas fa-solid fa-arrow-right"></i>
+                                    <i class="nav-icon fas fa-solid fa-arrow-right"></i>
                                     <p>
                                         Work Flow
                                     </p>

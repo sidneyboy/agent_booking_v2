@@ -34,7 +34,7 @@
                     </div>
                     <div class="form-group">
 
-                        <button type="submit" class="btn btn-success btn-block">SUBMIT</button>
+                        <button type="submit" class="btn btn-success btn-block">Submit</button>
                     </div>
                 </form>
             </div>
@@ -73,6 +73,7 @@
                 processData: false,
                 success: function(data) {
                     console.log(data);
+                    $('.loading').hide();
                     if (data == 'saved') {
                         Swal.fire({
                             position: 'top-end',
@@ -83,22 +84,23 @@
                         })
                         //location.reload();
                         window.location.href = "/work_flow";
-                    } else if (data == 'existing_sku_upload_code') {
-                        Swal.fire(
-                            'Existing Sku Upload Code',
-                            'File Already Uploaded!',
-                            'error'
-                        )
-                        $('.loading').hide();
-                    } else {
+                    } else if(data == 'incorrect_file') {
                         Swal.fire(
                             'Something went wrong',
-                            data,
+                            'Incorrect File',
                             'error'
                         )
                         $('.loading').hide();
                     }
                 },
+                error: function(error) {
+                    $('.loading').hide();
+                    Swal.fire(
+                        'Cannot Proceed',
+                        'Please Contact IT Support',
+                        'error'
+                    )
+                }
             });
         }));
     </script>

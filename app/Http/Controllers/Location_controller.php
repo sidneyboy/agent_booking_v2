@@ -33,9 +33,11 @@ class Location_controller extends Controller
             }
         }
 
-
-
         $counter = count($csv);
+
+        Schema::disableForeignKeyConstraints();
+        DB::table('locations')->truncate();
+        Schema::enableForeignKeyConstraints();
 
         for ($i = 1; $i < $counter; $i++) {
             $location = Location::find($csv[$i][0]);
@@ -51,11 +53,11 @@ class Location_controller extends Controller
 
         fclose($handle);
 
-        $audit_trail = new Audit_trail([
-            'description' => 'Uploaded Location',
-        ]);
+        // $audit_trail = new Audit_trail([
+        //     'description' => 'Uploaded Location',
+        // ]);
 
-        $audit_trail->save();
+        // $audit_trail->save();
 
         return 'saved';
     }

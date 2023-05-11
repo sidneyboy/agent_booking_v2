@@ -36,6 +36,10 @@ class Principal_controller extends Controller
 
          $counter = count($csv);
 
+         Schema::disableForeignKeyConstraints();
+         DB::table('principals')->truncate();
+         Schema::enableForeignKeyConstraints();
+
          for ($i=1; $i < $counter; $i++) { 
             $principal_search = Principal::where('principal',$csv[$i][1])->first();
             if (!$principal_search) {
