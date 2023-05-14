@@ -90,7 +90,7 @@
         <input type="hidden" value="{{ $agent_user->agent_name }}" name="agent_name">
     </div> --}}
     <div class="table table-responsive">
-        <table class="table table-sm table-bordered" id="example2">
+        <table class="table table-sm table-bordered" id="example2" style="font-size:11px;">
             <thead>
                 <tr>
                     <th colspan="2">Current Inventory</th>
@@ -109,10 +109,11 @@
                 @foreach ($sales_order_inventory as $data)
                     <tr>
                         <td>
+                            <b style="color:green">{{ $data->sku_code }}</b><br />
                             {{ $data->description }} <br />
-                            {{ $data->sku_type }}
+                            <b style="color:blue;">{{ $data->sku_type }}</b>
                         </td>
-                        <td><input type="number" min="0" class="form-control" value="0"
+                        <td><input type="number" style="text-align: center;" min="0" class="form-control" value="0"
                                 name="delivered_quantity[{{ $data->id }}]"></td>
                     </tr>
                 @endforeach

@@ -75,7 +75,8 @@
             <tbody>
                 @foreach ($current_inventory_id as $current_inventory_data)
                     <tr>
-                        <td>{{ $current_inventory_description[$current_inventory_data] }} <br /> {{ $sku_type }}</td>
+                        <td>{{ $current_inventory_description[$current_inventory_data] }} <br /> {{ $sku_type }}
+                        </td>
                         <td style="text-align: right">
                             {{ $prev_delivered_inventory[$current_inventory_data] }}
                         </td>
@@ -125,7 +126,8 @@
                 @endforeach
                 @foreach ($new_sales_order_inventory_quantity as $new_sales_order_inventory_id => $new_sales_order_data)
                     <tr>
-                        <td>{{ $new_sales_order_inventory_description[$new_sales_order_inventory_id] }}<br />{{ $sku_type }}</td>
+                        <td>{{ $new_sales_order_inventory_description[$new_sales_order_inventory_id] }}<br />{{ $sku_type }}
+                        </td>
                         <td style="text-align:right">0</td>
                         <td style="text-align:right">0</td>
                         <td style="text-align:right">0</td>

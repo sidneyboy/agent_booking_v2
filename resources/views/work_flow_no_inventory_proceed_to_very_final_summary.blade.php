@@ -11,7 +11,8 @@
 <form id="work_flow_no_inventory_save_previous_sales_register">
 
     <div class="table table-responsive">
-        <table class="table table-bordered table-hover table-sm very_final_inventory">
+        <table class="table table-bordered table-hover table-sm very_final_inventory table-striped"
+            style="font-size:11px;">
             <thead>
                 <tr>
                     <th colspan="4">Delivery Receipt: {{ $dr }}</th>
@@ -29,7 +30,10 @@
             <tbody>
                 @foreach ($inventory_data as $data)
                     <tr>
-                        <td>{{ $data->description }} <br /> {{ $data->sku_type }}</td>
+                        <td><b style="color:green">{{ $data->sku_code }}
+                            </b><br /> {{ $data->description }}<br />
+                            <b style="color:blue">{{ $data->sku_type }}</b>
+                        </td>
                         <td>
                             {{ $current_sku_inventory[$data->id] }}
                             <input type="hidden" name="current_sku_inventory[{{ $data->id }}]"
@@ -120,7 +124,7 @@
                     });
 
                     window.location.href = "/collection";
-                }else{
+                } else {
                     alert('saved');
                 }
             },

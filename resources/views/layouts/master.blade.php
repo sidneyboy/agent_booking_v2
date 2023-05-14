@@ -362,7 +362,7 @@
                                             </p>
                                         </a>
                                     </li>
-                                    <li class="nav-item">
+                                    {{-- <li class="nav-item">
                                         <a href="{{ url('customer_principal_price_upload') }}"
                                             class="nav-link {{ $active == 'customer_principal_price_upload' ? 'active' : '' }}">
                                             <i class="nav-icon fas fa-solid fa-arrow-right"></i>
@@ -370,7 +370,7 @@
                                                 Customer Price Level 
                                             </p>
                                         </a>
-                                    </li>
+                                    </li> --}}
                                     <li class="nav-item">
                                         <a href="{{ url('inventory_upload') }}"
                                             class="nav-link {{ $active == 'inventory_upload' ? 'active' : '' }}">

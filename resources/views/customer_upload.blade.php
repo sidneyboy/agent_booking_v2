@@ -81,7 +81,7 @@
                              showConfirmButton: false,
                              timer: 1500
                          })
-                         window.location.href = "/customer_principal_price_upload";
+                         window.location.href = "/work_flow";
                      } else if (data == 'incorrect_file') {
                          Swal.fire(
                              'INCORRECT FILE',

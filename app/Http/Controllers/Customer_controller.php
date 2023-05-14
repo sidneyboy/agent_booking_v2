@@ -43,80 +43,69 @@ class Customer_controller extends Controller
         $counter = count($csv);
 
         if ($csv[0][0] == 'BOOKING CUSTOMER') {
-            for ($i = 2; $i < $counter; $i++) {
-                $customer = Customer::find($csv[$i][0]);
-                if ($customer) {
-                    if ($csv[$i][9] == '' or $csv[$i][9] == null) {
-                        $allowed = 1;
+            for ($i = 1; $i < $counter; $i++) {
+                if ($csv[$i][0] == 'CUSTOMER DATA') {
+                    $customer = Customer::find($csv[$i][1]);
+                    if ($customer) {
+                        if ($csv[$i][13] == '' or $csv[$i][13] == null) {
+                            $allowed = 1;
+                        } else {
+                            $allowed = $csv[$i][13];
+                        }
+                        Customer::where('id', $csv[$i][1])
+                            ->update([
+                                'id' => $csv[$i][1],
+                                'store_name' => $csv[$i][2],
+                                'kob' => $csv[$i][3],
+                                'credit_limit' => str_replace(',', '', $csv[$i][5]),
+                                'location_id' => $csv[$i][7],
+                                'contact_person' => $csv[$i][8],
+                                'contact_number' => $csv[$i][9],
+                                'latitude' => $csv[$i][10],
+                                'longitude' => $csv[$i][11],
+                                'mode_of_transaction' => $csv[$i][12],
+                                'allowed_number_of_sales_order' => $allowed,
+                            ]);
                     } else {
-                        $allowed = $csv[$i][9];
-                    }
-                    Customer::where('id', $csv[$i][0])
-                        ->update([
-                            'id' => $csv[$i][0],
-                            'store_name' => $csv[$i][1],
-                            'kob' => $csv[$i][2],
-                            'credit_limit' => str_replace(',', '', $csv[$i][4]),
-                            'location_id' => $csv[$i][6],
-                            'contact_person' => $csv[$i][7],
-                            'contact_number' => $csv[$i][8],
+                        if ($csv[$i][13] == '' or $csv[$i][13] == null) {
+                            $allowed = 1;
+                        } else {
+                            $allowed = $csv[$i][13];
+                        }
+                        $customer_saved = new Customer([
+                            'id' => $csv[$i][1],
+                            'store_name' => $csv[$i][2],
+                            'kob' => $csv[$i][3],
+                            'credit_limit' => str_replace(',', '', $csv[$i][5]),
+                            'location_id' => $csv[$i][7],
+                            'contact_person' => $csv[$i][8],
+                            'contact_number' => $csv[$i][9],
+                            'latitude' => $csv[$i][10],
+                            'longitude' => $csv[$i][11],
+                            'mode_of_transaction' => $csv[$i][12],
                             'allowed_number_of_sales_order' => $allowed,
-                            'mode_of_transaction' => $csv[$i][10],
-                            'latitude' => $csv[$i][11],
-                            'longitude' => $csv[$i][12],
                         ]);
-                } else {
-                    if ($csv[$i][9] == '' or $csv[$i][9] == null) {
-                        $allowed = 1;
-                    } else {
-                        $allowed = $csv[$i][9];
+                        $customer_saved->save();
                     }
-                    $customer_saved = new Customer([
-                        'id' => $csv[$i][0],
-                        'store_name' => $csv[$i][1],
-                        'kob' => $csv[$i][2],
-                        'credit_limit' => str_replace(',', '', $csv[$i][4]),
-                        'location_id' => $csv[$i][6],
-                        'contact_person' => $csv[$i][7],
-                        'contact_number' => $csv[$i][8],
-                        'allowed_number_of_sales_order' => $allowed,
-                        'mode_of_transaction' => $csv[$i][10],
-                        'latitude' => $csv[$i][11],
-                        'longitude' => $csv[$i][12],
-                    ]);
-                    $customer_saved->save();
-                }
-            }
-
-            // $audit_trail = new Audit_trail([
-            //     'description' => 'Uploaded export_customer_applied_to_agent ' . $csv[0][2] . ' Export Code',
-            // ]);
-
-            // $audit_trail->save();
-
-            fclose($handle);
-
-            return 'saved';
-        } elseif ($csv[0][0] == 'customer_principal_price') {
-            for ($i = 2; $i < $counter; $i++) {
-                //echo $csv[$i][1];
-                $check_price_level = Customer_principal_price::where('principal_id', $csv[$i][1])->where('customer_id', $csv[$i][0])->first();
-                if ($check_price_level) {
-                    Customer_principal_price::where('customer_id', $csv[$i][0])
-                        ->where('principal_id', $csv[$i][1])
-                        ->update([
-                            'customer_id' => $csv[$i][0],
-                            'principal_id' => $csv[$i][1],
-                            'price_level' => $csv[$i][2],
+                } elseif ($csv[$i][0] == 'CUSTOMER PRICE') {
+                    $check_price_level = Customer_principal_price::where('principal_id', $csv[$i][2])->where('customer_id', $csv[$i][1])->first();
+                    if ($check_price_level) {
+                        Customer_principal_price::where('customer_id', $csv[$i][1])
+                            ->where('principal_id', $csv[$i][1])
+                            ->update([
+                                'customer_id' => $csv[$i][1],
+                                'principal_id' => $csv[$i][2],
+                                'price_level' => $csv[$i][3],
+                            ]);
+                    } else {
+                        $new_customer_principal_price = new Customer_principal_price([
+                            'customer_id' => $csv[$i][1],
+                            'principal_id' => $csv[$i][2],
+                            'price_level' => $csv[$i][3],
                         ]);
-                } else {
-                    $new_customer_principal_price = new Customer_principal_price([
-                        'customer_id' => $csv[$i][0],
-                        'principal_id' => $csv[$i][1],
-                        'price_level' => $csv[$i][2],
-                    ]);
 
-                    $new_customer_principal_price->save();
+                        $new_customer_principal_price->save();
+                    }
                 }
             }
 
