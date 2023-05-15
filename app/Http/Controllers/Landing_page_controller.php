@@ -7,6 +7,8 @@ use App\Models\Location;
 use App\Models\Customer;
 use App\Models\Inventory;
 use App\Models\Principal;
+use App\Models\Sales_order;
+use App\Models\Sales_order_for_new_customer;
 use Illuminate\Http\Request;
 
 class Landing_page_controller extends Controller
@@ -39,9 +41,19 @@ class Landing_page_controller extends Controller
                     ->with('agent_user', $agent_user)
                     ->with('active', 'inventory_upload');
             } else {
-                return view('work_flow')
+                $agent_user = Agent_user::first();
+                $customer = Customer::select('id', 'store_name')->get();
+                $principal = Principal::select('id', 'principal')->where('principal', '!=', 'NONE')->get();
+                $sales_order_check = Sales_order::where('exported', 'not_yet_exported')->count();
+                $sales_order_new_customer_check = Sales_order_for_new_customer::where('exported', null)->count();
+
+                return view('work_flow', [
+                    'customer' => $customer,
+                    'principal' => $principal,
+                ])->with('active', 'work_flow')
                     ->with('agent_user', $agent_user)
-                    ->with('active', 'work_flow');
+                    ->with('sales_order_check', $sales_order_check)
+                    ->with('sales_order_new_customer_check', $sales_order_new_customer_check);
             }
         }
     }

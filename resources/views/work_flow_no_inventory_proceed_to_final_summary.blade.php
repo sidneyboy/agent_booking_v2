@@ -1,28 +1,26 @@
-<style>
+{{-- <style>
     .current_inventory th:first-child,
     .current_inventory td:first-child {
         position: sticky;
         left: 0px;
         background-color: antiquewhite;
     }
-</style>
+</style> --}}
 
 
 <form id="work_flow_no_inventory_proceed_to_very_final_summary">
-    <input type="text" class="form-control" name="dr" required placeholder="Delivery Receipt">
+    <input type="text" class="form-control form-control-sm" name="dr" required placeholder="Delivery Receipt">
     <br />
     <div class="table table-responsive">
-        <table class="table table-bordered table-hover table-striped table-sm current_inventory" style="font-size:11px;">
+        <table class="table table-bordered table-hover table-striped table-sm current_inventory" style="font-size:13px;">
             <thead>
                 <tr>
-                    <th>Delivery Date</th>
-                    <th colspan="3">{{ $delivery_date }}</th>
+                    <th>Delivery Date:</th>
+                    <th colspan="3" style="text-align: center;">{{ $delivery_date }}</th>
                 </tr>
                 <tr>
                     <th>Desc</th>
                     <th>Delivered QTY</th>
-                    {{-- <th>Current Inventory</th>
-                    <th>BO</th> --}}
                     <th>U/P</th>
                 </tr>
             </thead>
@@ -39,18 +37,17 @@
                             <input type="hidden" name="current_sku_inventory[{{ $data->id }}]"
                                 value="{{ $current_sku_inventory[$data->id] }}">
                         </td>
-                        <td><input type="text" class="form-control unit_price" name="unit_price[{{ $data->id }}]"
-                                style="width:100px;"></td>
+                        <td><input type="text" class="form-control unit_price form-control-sm" name="unit_price[{{ $data->id }}]"
+                                style="width:100px;text-align:center;"></td>
                     </tr>
                 @endforeach
             </tbody>
             <tfoot>
                 <tr>
-                    <td>Total Discount</td>
+                    <th>Total Discount</th>
                     <td></td>
                     <td><input type="text" class="form-control unit_price" name="total_discount"
-                            style="width:100px;">
-                    </td>
+                            style="width:100px;text-align:center;"></td>
                 </tr>
             </tfoot>
         </table>
@@ -60,7 +57,7 @@
     <input type="hidden" name="principal_id" value="{{ $principal_id }}">
     <input type="hidden" name="sku_type" value="{{ $sku_type }}">
     <input type="hidden" name="delivery_date" value="{{ $delivery_date }}">
-    <button class="btn btn-info btn-block">Proceed To Final Summary</button>
+    <button class="btn btn-info btn-block">PROCEED</button>
 </form>
 
 <script>

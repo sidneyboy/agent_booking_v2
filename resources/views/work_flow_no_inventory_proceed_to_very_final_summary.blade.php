@@ -12,7 +12,7 @@
 
     <div class="table table-responsive">
         <table class="table table-bordered table-hover table-sm very_final_inventory table-striped"
-            style="font-size:11px;">
+            style="font-size:13px;">
             <thead>
                 <tr>
                     <th colspan="4">Delivery Receipt: {{ $dr }}</th>
@@ -56,28 +56,28 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <td>Gross</td>
-                    <td></td>
-                    <td style="text-align: right">{{ number_format(array_sum($gross), 2, '.', ',') }}</td>
+                    <th>Gross</th>
+                    <th></th>
+                    <th style="text-align: right">{{ number_format(array_sum($gross), 2, '.', ',') }}</th>
                 </tr>
                 <tr>
-                    <td>Total Discount</td>
-                    <td></td>
-                    <td style="text-align: right">
+                    <th>Total Discount</th>
+                    <th></th>
+                    <th style="text-align: right">
                         {{ number_format($total_discount, 2, '.', ',') }}
                         <input type="hidden" class="form-control unit_price" name="total_discount" style="width:100px;"
                             value="{{ $total_discount }}">
-                    </td>
+                    </th>
                 </tr>
                 <tr>
-                    <td>Total</td>
-                    <td></td>
-                    <td style="text-align: right">
+                    <th>Total</th>
+                    <th></th>
+                    <th style="text-align: right">
                         {{ number_format(array_sum($gross) - $total_discount, 2, '.', ',') }}
                         @php
                             $total_amount = array_sum($gross) - $total_discount;
                         @endphp
-                    </td>
+                    </th>
                 </tr>
             </tfoot>
         </table>
@@ -89,7 +89,7 @@
     <input type="hidden" name="principal_id" value="{{ $principal_id }}">
     <input type="hidden" name="sku_type" value="{{ $sku_type }}">
     <input type="hidden" name="date_delivered" value="{{ $delivery_date }}">
-    <button class="btn btn-success btn-block">Submit</button>
+    <button class="btn btn-success btn-block">SUBMIT</button>
 </form>
 
 <script>
