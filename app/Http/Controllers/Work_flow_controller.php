@@ -64,7 +64,7 @@ class Work_flow_controller extends Controller
             ])->with('principal_id', $request->input('principal'))
                 ->with('sku_type', $request->input('sku_type'));
         } else {
-            $check_inventory_draft = Inventory_draft::select('id','date_delivered','sales_register_id')->where('customer_id', $request->input('customer'))
+            $check_inventory_draft = Inventory_draft::select('id', 'date_delivered', 'sales_register_id')->where('customer_id', $request->input('customer'))
                 ->where('principal_id', $request->input('principal'))
                 ->where('sku_type', $request->input('sku_type'))
                 ->where('status', null)
@@ -75,7 +75,7 @@ class Work_flow_controller extends Controller
                     $registered_inventory[] = $data->inventory_id;
                 }
 
-                $sales_order_inventory =  Inventory::select('sku_type', 'description', 'sku_code', 'id')
+                $sales_order_inventory =  Inventory::select('sku_type', 'description', 'sku_code', 'id', 'sku_code')
                     ->where('principal_id', $request->input('principal'))
                     ->where('sku_type', $request->input('sku_type'))
                     ->whereNotIn('id', $registered_inventory)
@@ -179,7 +179,7 @@ class Work_flow_controller extends Controller
 
     public function work_flow_suggested_sales_order(Request $request)
     {
-        // return $request->input();
+        //return $request->input();
         date_default_timezone_set('Asia/Manila');
         $date = date('Y-m-d');
 
@@ -190,10 +190,12 @@ class Work_flow_controller extends Controller
             'current_inventory_id' => $request->input('current_inventory_id'),
             'current_remaining_inventory' => $request->input('current_remaining_inventory'),
             'current_inventory_description' => $request->input('current_inventory_description'),
+            'current_inventory_sku_code' => $request->input('current_inventory_sku_code'),
             'prev_delivered_inventory' => $request->input('prev_delivered_inventory'),
             'new_sales_order_inventory_id' => $request->input('new_sales_order_inventory_id'),
             'new_sales_order_inventory_quantity' => $new_sales_order_inventory_quantity,
             'new_sales_order_inventory_description' => $request->input('new_sales_order_inventory_description'),
+            'new_sales_order_inventory_sku_code' => $request->input('new_sales_order_inventory_sku_code'),
             'current_inventory_unit_price' => $request->input('current_inventory_unit_price'),
             'sales_register_id' => $request->input('sales_register_id'),
         ])->with('date_delivered', $request->input('date_delivered'))
@@ -251,23 +253,6 @@ class Work_flow_controller extends Controller
 
         $agent_user = Agent_user::select('agent_name', 'agent_id')->first();
 
-        // return $bad_order_data = Bad_order::select('pcm_number')->latest()->first();
-
-        // if (!is_null($bad_order_data)) {
-        //     $var_explode = explode('-', $bad_order_data->pcm_number);
-        //     $year_and_month = $var_explode[3] . "-" . $var_explode[4];
-        //     $series = $var_explode[5];
-
-
-        //     if ($date_receipt != $year_and_month) {
-        //         $pcm_number = "PCM-" . $agent_user->agent_name . "-" . $agent_user->agent_id . "-" . $date_receipt  . "-0001";
-        //     } else {
-        //         $pcm_number = "PCM-" . $agent_user->agent_name . "-" . $agent_user->agent_id . "-" . $date_receipt . "-" . str_pad($series + 1, 4, 0, STR_PAD_LEFT);
-        //     }
-        // } else {
-        //     $pcm_number = "PCM-" . $agent_user->agent_name . "-" . $agent_user->agent_id . "-" . $date_receipt  . "-0001";
-        // }
-
         $agent_user = Agent_user::select('agent_id', 'agent_name')->first();
 
         $sales_order_data = Sales_order::select('sales_order_number')->latest()->first();
@@ -276,20 +261,17 @@ class Work_flow_controller extends Controller
 
         if ($sales_order_data != "") {
             $var_explode = explode('-', $sales_order_data->sales_order_number);
-            $year_and_month = $var_explode[4] . "-" . $var_explode[5];
-            $series = $var_explode[6];
-
+            $year_and_month = $var_explode[3] . "-" . $var_explode[4];
+            $series = $var_explode[5];
 
             if ($date_receipt != $year_and_month) {
-                $sales_order_number = "SO-" . $agent_user->agent_name  . "-" . $customer_principal_price->customer->store_name  . "-" . $agent_user->agent_id . "-" . $date_receipt  . "-0001";
+                $sales_order_number = "SO-" .   $customer_principal_price->customer->store_name  . "-" . $agent_user->agent_id . "-" . $date_receipt  . "-0001";
             } else {
-                $sales_order_number = "SO-" . $agent_user->agent_name . "-" . $customer_principal_price->customer->store_name . "-" . $agent_user->agent_id . "-" . $date_receipt . "-" . str_pad($series + 1, 4, 0, STR_PAD_LEFT);
+                $sales_order_number = "SO-" .  $customer_principal_price->customer->store_name . "-" . $agent_user->agent_id . "-" . $date_receipt . "-" . str_pad($series + 1, 4, 0, STR_PAD_LEFT);
             }
         } else {
-            $sales_order_number = "SO-" . $agent_user->agent_name . "-" . $customer_principal_price->customer->store_name . "-" . $agent_user->agent_id . "-" . $date_receipt  . "-0001";
+            $sales_order_number = "SO-" .  $customer_principal_price->customer->store_name . "-" . $agent_user->agent_id . "-" . $date_receipt  . "-0001";
         }
-
-
 
         $inventory_data = Inventory::select(
             'sku_type',
@@ -310,14 +292,14 @@ class Work_flow_controller extends Controller
 
         return view('work_flow_final_summary', [
             'sales_order_final_inventory_description' => $request->input('sales_order_final_inventory_description'),
+            'sales_order_final_inventory_sku_code' => $request->input('sales_order_final_inventory_sku_code'),
             'sales_order_final_inventory_id' => $request->input('sales_order_final_inventory_id'),
             'sales_order_final_quantity' => $request->input('sales_order_final_quantity'),
             'inventory_data' => $inventory_data,
             'customer_principal_discount' => $customer_principal_discount,
             'pcm_number' => strtoupper($request->input('pcm_number')),
-
-
             'current_inventory_description' => $request->input('current_inventory_description'),
+            'current_inventory_sku_code' => $request->input('current_inventory_sku_code'),
             'current_inventory_unit_price' => $request->input('current_inventory_unit_price'),
             'current_bo' => $request->input('current_bo'),
             'current_bo_inventory_id' => $request->input('current_bo_inventory_id'),
@@ -338,30 +320,32 @@ class Work_flow_controller extends Controller
         $date = date('Y-m-d');
         $date_receipt = date('Y-m');
 
-        // $explode = explode('-', $request->input('location_id'));
-        // $location_id = $explode[0];
-        // $location = $explode[1];
+        $delivery_date = $request->input('delivery_date');
 
-        $current_sku_inventory = array_filter($request->input('delivered_quantity'));
+        if (isset($delivery_date)) {
+            $current_sku_inventory = array_filter($request->input('delivered_quantity'));
 
-        $inventory_data = Inventory::select(
-            'sku_type',
-            'description',
-            'sku_code',
-            'id',
-        )->whereIn('id', array_keys($current_sku_inventory))
-            ->get();
-
+            $inventory_data = Inventory::select(
+                'sku_type',
+                'description',
+                'sku_code',
+                'id',
+            )->whereIn('id', array_keys($current_sku_inventory))
+                ->get();
 
 
-        return view('work_flow_no_inventory_proceed_to_final_summary', [
-            'inventory_data' => $inventory_data,
-            'current_sku_inventory' => $current_sku_inventory,
-        ])->with('customer_id', $request->input('customer_id'))
-            ->with('principal_id', $request->input('principal_id'))
-            ->with('delivery_date', $request->input('delivery_date'))
-            ->with('sku_type', $request->input('sku_type'))
-            ->with('date', $date);
+
+            return view('work_flow_no_inventory_proceed_to_final_summary', [
+                'inventory_data' => $inventory_data,
+                'current_sku_inventory' => $current_sku_inventory,
+            ])->with('customer_id', $request->input('customer_id'))
+                ->with('principal_id', $request->input('principal_id'))
+                ->with('delivery_date', $request->input('delivery_date'))
+                ->with('sku_type', $request->input('sku_type'))
+                ->with('date', $date);
+        } else {
+            return '<center><b style="color:red;">CANNOT PROCEED. FILL UP SALES ORDER DELIVERY DATE ABOVE.</b></center>';
+        }
     }
 
     public function work_flow_no_inventory_save(Request $request)
@@ -466,13 +450,11 @@ class Work_flow_controller extends Controller
 
     public function work_flow_no_inventory_proceed_to_very_final_summary(Request $request)
     {
-        //return $request->input();
 
         date_default_timezone_set('Asia/Manila');
         $date = date('Y-m-d');
         $date_receipt = date('Y-m');
 
-        //$current_sku_inventory = array_filter($request->input('delivered_quantity'));
 
         $inventory_data = Inventory::select(
             'sku_type',

@@ -1,5 +1,4 @@
 @extends('layouts.master')
-
 @section('title', 'SALES ORDER EXPORT')
 <style>
     .table_sales_order_export th:first-child,
@@ -10,11 +9,7 @@
     }
 </style>
 @section('navbar')
-
-
 @section('sidebar')
-
-
 @section('content')
 
     <br />
@@ -38,7 +33,7 @@
                     <form id="sales_order_export_process">
                         <div class="table table-responsive" id="export_table">
                             @foreach ($sales_order as $data)
-                                <table class="table table-bordered table-sm table_sales_order_export">
+                                <table class="table table-bordered table-striped table-sm table_sales_order_export">
                                     <thead>
                                         <tr>
                                             <th>Customer ID</th>
@@ -90,6 +85,8 @@
                                                 <td>{{ $details->quantity }}</td>
                                                 <td>{{ $details->unit_price }}</td>
                                                 <td>{{ $details->unit_price * $details->quantity }}</td>
+                                                <td></td>
+                                                <td></td>
                                                 <td></td>
                                             </tr>
                                         @endforeach
@@ -145,7 +142,7 @@
                                             <th>Total Amount</th>
                                             <th>SO</th>
                                         </tr>
-                                        
+
                                         <tr>
                                             <td>NEW CUSTOMER</td>
                                             <td>{{ $data->sales_order_new_customer->store_name }}</td>

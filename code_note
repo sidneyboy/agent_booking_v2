@@ -31,3 +31,22 @@ error: function(error) {
 
         return true;
     }
+
+
+
+
+
+
+
+
+    $("#example1").DataTable();
+    $('#example2').DataTable({
+        "paging": false,
+        "lengthChange": false,
+        "searching": true,
+        "ordering": true,
+        "info": false,
+        "autoWidth": false,
+        "scrollY": '300px',
+        "scrollCollapse": true,
+    });

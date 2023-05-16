@@ -12,9 +12,10 @@
     <div class="table table-responsive">
         @if (array_sum($current_bo) != 0)
             <label>BO</label>
-            <input type="text" class="form-control" name="pcm_number" required placeholder="PCM No">
+            <input type="text" class="form-control form-control-sm" style="text-transform: uppercase" name="pcm_number"
+                required placeholder="PCM No">
             <br />
-            <table class="table table-bordered table-sm table_suggested_so">
+            <table class="table table-bordered table-sm table_suggested_so table-striped" style="font-size:13px;">
                 <thead>
                     <tr>
                         <th>Desc</th>
@@ -26,7 +27,11 @@
                 <tbody>
                     @foreach ($current_inventory_id as $bo_data)
                         <tr>
-                            <td>{{ $current_inventory_description[$bo_data] }} - {{ $sku_type }}</td>
+                            <td>
+                                <b style="color:blue">{{ $current_inventory_sku_code[$bo_data] }}</b><br />
+                                {{ $current_inventory_description[$bo_data] }} <br />
+                                <b style="color:green">{{ $sku_type }}</b>
+                            </td>
                             <td style="text-align: right">{{ $current_bo[$bo_data] }}</td>
                             <td style="text-align: right">
                                 {{ number_format($current_inventory_unit_price[$bo_data], 2, '.', ',') }}</td>
@@ -39,6 +44,8 @@
                                 <input type="hidden" value="{{ $bo_data }}" name="current_bo_inventory_id[]">
                                 <input type="hidden" value="{{ $current_inventory_description[$bo_data] }}"
                                     name="current_inventory_description[{{ $bo_data }}]">
+                                <input type="hidden" value="{{ $current_inventory_sku_code[$bo_data] }}"
+                                    name="current_inventory_sku_code[{{ $bo_data }}]">
                                 <input type="hidden" value="{{ $current_bo[$bo_data] }}"
                                     name="current_bo[{{ $bo_data }}]">
                                 <input type="hidden" value="{{ $current_inventory_unit_price[$bo_data] }}"
@@ -56,9 +63,9 @@
             </table>
         @endif
     </div>
+    <label>SUGGESTED SALES ORDER</label>
     <div class="table table-responsive">
-        <label>SUGGESTED SALES ORDER</label>
-        <table class="table table-bordered table-sm table_suggested_so">
+        <table class="table table-bordered table-sm table_suggested_so table-striped" style="font-size:13px;">
             <thead>
                 <tr>
                     <th>Desc</th>
@@ -75,7 +82,10 @@
             <tbody>
                 @foreach ($current_inventory_id as $current_inventory_data)
                     <tr>
-                        <td>{{ $current_inventory_description[$current_inventory_data] }} <br /> {{ $sku_type }}
+                        <td>
+                            <b style="color:blue">{{ $current_inventory_sku_code[$current_inventory_data] }}</b><br />
+                            {{ $current_inventory_description[$current_inventory_data] }} <br />
+                            <b style="color:green">{{ $sku_type }}</b>
                         </td>
                         <td style="text-align: right">
                             {{ $prev_delivered_inventory[$current_inventory_data] }}
@@ -117,16 +127,25 @@
                             <input type="hidden"
                                 name="sales_order_final_inventory_description[{{ $current_inventory_data }}]"
                                 value="{{ $current_inventory_description[$current_inventory_data] }}">
+                            <input type="hidden"
+                                name="sales_order_final_inventory_sku_code[{{ $current_inventory_data }}]"
+                                value="{{ $current_inventory_sku_code[$current_inventory_data] }}">
 
-                            <input type="number" style="width:100px;text-align:right" min="0"
-                                class="form-control" required value="{{ $suggested_sales_order }}"
+                            <input type="number" style="width:100px;text-align:center" min="0"
+                                class="form-control form-control-sm" required value="{{ $suggested_sales_order }}"
                                 name="sales_order_final_quantity[{{ $current_inventory_data }}]">
                         </td>
                     </tr>
                 @endforeach
                 @foreach ($new_sales_order_inventory_quantity as $new_sales_order_inventory_id => $new_sales_order_data)
                     <tr>
-                        <td>{{ $new_sales_order_inventory_description[$new_sales_order_inventory_id] }}<br />{{ $sku_type }}
+                        <td>
+                            <b
+                                style="color:blue">{{ $new_sales_order_inventory_sku_code[$new_sales_order_inventory_id] }}</b><br />
+
+
+                            {{ $new_sales_order_inventory_description[$new_sales_order_inventory_id] }}<br />
+                            <b style="color:green">{{ $sku_type }}</b>
                         </td>
                         <td style="text-align:right">0</td>
                         <td style="text-align:right">0</td>
@@ -138,12 +157,15 @@
                         <td>
                             <input type="hidden"
                                 name="sales_order_final_inventory_description[{{ $new_sales_order_inventory_id }}]"
-                                value="{{ $new_sales_order_inventory_description[$new_sales_order_inventory_id] }}">
+                                value="{{ $new_sales_order_inventory_description[$new_sales_order_inventory_id] }}">\
+                            <input type="hidden"
+                                name="sales_order_final_inventory_sku_code[{{ $new_sales_order_inventory_id }}]"
+                                value="{{ $new_sales_order_inventory_sku_code[$new_sales_order_inventory_id] }}">
                             <input type="hidden" name="sales_order_final_inventory_id[]"
                                 value="{{ $new_sales_order_inventory_id }}">
-                            <input type="number" style="width:100px;text-align:right"
+                            <input type="number" style="width:100px;text-align:center;"
                                 name="sales_order_final_quantity[{{ $new_sales_order_inventory_id }}]" min="0"
-                                value="{{ $new_sales_order_data }}" class="form-control" required>
+                                value="{{ $new_sales_order_data }}" class="form-control form-control-sm" required>
                         </td>
                     </tr>
                 @endforeach

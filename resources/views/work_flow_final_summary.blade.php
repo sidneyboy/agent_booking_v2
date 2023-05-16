@@ -16,6 +16,15 @@
         height: 200px;
         background-color: white;
     }
+
+    table {
+        width: 100%;
+        font-size: 13px;
+        font-family: Arial, Helvetica, sans-serif;
+        padding: 0px;
+        background-color: white,
+        vertical-align: middle;
+    }
 </style>
 
 <form id="work_flow_inventory_save">
@@ -23,10 +32,10 @@
 
         @if (isset($current_bo))
             @if (array_sum($current_bo) != 0)
-                <table class="table table-bordered table-sm table_suggested_so">
+                <table class="table table-bordered table-sm table-striped table_suggested_so">
                     <thead>
                         <tr>
-                            <th colspan="4">This will serve as un-official PCM</th>
+                            <th colspan="4" style="color:blue">THIS WILL SERVE AS UNOFFICIAL PCM</th>
                         </tr>
                         <tr>
                             <th colspan="4">
@@ -44,14 +53,20 @@
                     <tbody>
                         @foreach ($current_bo_inventory_id as $bo_data)
                             <tr>
-                                <td>{{ $current_inventory_description[$bo_data] }} - {{ $sku_type }}</td>
+                                <td>
+                                    <b style="color:blue">{{ $current_inventory_sku_code[$bo_data] }}</b><br />
+                                    
+                                    {{ $current_inventory_description[$bo_data] }} <br />
+                                    <b style="color:green">{{ $sku_type }}</b>
+                                
+                                </td>
                                 <td style="text-align: right">{{ $current_bo[$bo_data] }}</td>
                                 <td style="text-align: right">
-                                    {{ number_format($current_inventory_unit_price[$bo_data], 2, ',', '.') }}</td>
+                                    {{ number_format($current_inventory_unit_price[$bo_data], 2, '.', ',') }}</td>
                                 <td style="text-align: right">
                                     @php
                                         $bo_sub_total = $current_inventory_unit_price[$bo_data] * $current_bo[$bo_data];
-                                        echo number_format($bo_sub_total, 2, ',', '.');
+                                        echo number_format($bo_sub_total, 2, '.', ',');
                                         $bo_total[] = $bo_sub_total;
                                     @endphp
                                     <input type="hidden" value="{{ $bo_data }}" name="current_bo_inventory_id[]">
@@ -68,7 +83,7 @@
                         <tr>
                             <th colspan="3" style="text-align: center">Total</th>
                             <th style="text-align: right">
-                                {{ number_format(array_sum($bo_total), 2, ',', '.') }}
+                                {{ number_format(array_sum($bo_total), 2, '.', ',') }}
                                 <input type="hidden" value="{{ array_sum($bo_total) }}" name="total_bo_amount">
                             </th>
                         </tr>
@@ -76,41 +91,35 @@
                 </table>
             @endif
         @endif
-
-        <br /><br /> <br />
-
-        <table class="table table-borderless table-sm"
-            style="font-size: 17px;font-family: Arial, Helvetica, sans-serif;">
-            <thead>
-                <tr>
-                    <th style="text-align: center;" colspan="3">JULMAR COMMERCIAL INC.</th>
-                </tr>
-                <tr>
-                    <th style="text-align: center;" colspan="3">OSMENA ST., CDO</th>
-                </tr>
-                <tr>
-                    <th style="text-align: center;" colspan="3">TEL 857-6197, 858-5771</th>
-                </tr>
-                <tr>
-                    <th style="text-align: center;" colspan="3">Vat Reg. TIN 486-701-947-000</th>
-                </tr>
-                <tr>
-                    <th style="text-align: center;" colspan="3">REP: {{ $agent_user->agent_name }}</th>
-                </tr>
-                <tr>
-                    <th style="text-align: center;" colspan="3">{{ $date }}</th>
-                </tr>
-                <tr>
-                    <th style="text-align: center;" colspan="3">{{ $sales_order_number }}</th>
-                </tr>
-                <tr>
-                    <th style="text-align: center;text-transform:uppercase" colspan="3">
-                        {{ $customer_principal_price->customer->mode_of_transaction }}</th>
-                </tr>
-
-            </thead>
+        <hr style="border: 5px solid black;">
+        <table style="text-align: center;">
+            <tr>
+                <th>JULMAR COMMERCIAL INC.</th>
+            </tr>
+            <tr>
+                <th>OSMENA ST., CDO</th>
+            </tr>
+            <tr>
+                <th>TEL: 857-6197, 858-5771</th>
+            </tr>
+            <tr>
+                <th>TIN: 486-701-947-000</th>
+            </tr>
+            <tr>
+                <th>REP: {{ $agent_user->agent_name }}</th>
+            </tr>
+            <tr>
+                <th>{{ $date }}</th>
+            </tr>
+            <tr>
+                <th>{{ $sales_order_number }}</th>
+            </tr>
+            <tr>
+                <th>
+                    {{ $customer_principal_price->customer->mode_of_transaction }}</th>
+            </tr>
         </table>
-        <table class="table table-bordered table-sm" style="font-size: 17px;font-family: Arial, Helvetica, sans-serif;">
+        <table>
             <thead>
                 <tr>
                     <th>Desc</th>
@@ -122,7 +131,11 @@
             <tbody>
                 @foreach ($inventory_data as $data)
                     <tr>
-                        <th>{{ $data->description }} {{ $data->uom }}</th>
+                        <th>
+                            <b style="color:blue">{{ $data->sku_code }}</b><br />
+                            
+                            {{ $data->description }}<br />
+                            <b style="color:green">{{ $data->uom }}<b/></th>
                         <th style="text-align: right">{{ $sales_order_final_quantity[$data->id] }}</th>
                         <th style="text-align: right">
                             @if ($customer_principal_price->price_level == 'price_1')
@@ -266,7 +279,7 @@
 
     $("#work_flow_inventory_save").on('submit', (function(e) {
         e.preventDefault();
-        $('.loading').show();
+        // $('.loading').show();
         $.ajax({
             url: "work_flow_inventory_save",
             type: "POST",
@@ -284,11 +297,11 @@
                         showConfirmButton: false,
                         timer: 1500
                     });
-                    window.location.href = "/collection";
-                }else{
+                    window.location.href = "/work_flow";
+                } else {
                     alert('asdasd');
                 }
-                
+
             },
         });
     }));

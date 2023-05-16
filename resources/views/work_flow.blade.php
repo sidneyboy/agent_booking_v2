@@ -31,17 +31,17 @@
                     <form id="work_flow_show_inventory">
                         <div class="form-group">
                             <label>Customer</label>
-                            <select name="customer" id="customer" class="form-control select2" required
+                            <select name="customer" id="customer" class="form-control form-control-sm select2" required
                                 style="width:100%;">
                                 <option value="" default>SELECT</option>
-                                <option value="NEW CUSTOMER">NEW CUSTOMER</option>
+                                {{-- <option value="NEW CUSTOMER">NEW CUSTOMER</option> --}}
                                 @foreach ($customer as $data)
                                     <option value="{{ $data->id }}">{{ $data->store_name }}</option>
                                 @endforeach
                             </select>
 
                             <label>Principal</label>
-                            <select name="principal" id="principal" class="form-control select2" required
+                            <select name="principal" id="principal" class="form-control form-control-sm select2" required
                                 style="width:100%;">
                                 <option value="" default>SELECT</option>
                                 @foreach ($principal as $data)
@@ -50,7 +50,7 @@
                             </select>
 
                             <label>Type</label>
-                            <select name="sku_type" id="sku_type" class="form-control select2" required
+                            <select name="sku_type" id="sku_type" class="form-control form-control-sm select2" required
                                 style="width:100%;">
                                 <option value="" default>SELECT</option>
                                 <option value="BUTAL">BUTAL</option>
@@ -64,7 +64,7 @@
                     </form>
                 
                 @else
-                    <p style="color:blue">
+                    <p style="color:blue;text-align:center;">
                         CANNOT TRANSACT PLEASE EXPORT THE PREVIOUS SO AND SEND TO ENCODER THANK YOU.</p>
                 @endif
             </div>

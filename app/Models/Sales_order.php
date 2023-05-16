@@ -40,6 +40,6 @@ class Sales_order extends Model
 
     public function agent()
     {
-        return $this->belongsTo('App\Models\Agent_user', 'agent_id','id');
+        return $this->belongsTo('App\Models\Agent_user', 'agent_id','agent_id');
     }
 }

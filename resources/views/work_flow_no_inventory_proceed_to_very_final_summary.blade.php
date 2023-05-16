@@ -123,7 +123,7 @@
                         timer: 1500
                     });
 
-                    window.location.href = "/collection";
+                    window.location.href = "/work_flow";
                 } else {
                     alert('saved');
                 }
