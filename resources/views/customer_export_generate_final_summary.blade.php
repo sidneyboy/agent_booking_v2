@@ -1,5 +1,5 @@
 <form id="customer_export_new_customer_saved">
-    <table class="table table-bordered table-hover">
+    <table class="table table-bordered table-hover table-sm table-striped">
         <thead>
             <tr>
                 <th colspan="2">New Customer Data</th>
@@ -39,15 +39,15 @@
         </thead>
     </table>
 
-    <input type="text" name="store_name" value="{{ $store_name }}">
-    <input type="text" name="kob" value="{{ $kob }}">
-    <input type="text" name="contact_person" value="{{ $contact_person }}">
-    <input type="text" name="contact_number" value="{{ $contact_number }}">
-    <input type="text" name="location" value="{{ $location }}">
-    <input type="text" name="location_id" value="{{ $location_id }}">
-    <input type="text" name="detailed_address" value="{{ $detailed_address }}">
-    <input type="text" name="longitude" value="{{ $longitude }}">
-    <input type="text" name="latitude" value="{{ $latitude }}">
+    <input type="hidden" name="store_name" value="{{ $store_name }}">
+    <input type="hidden" name="kob" value="{{ $kob }}">
+    <input type="hidden" name="contact_person" value="{{ $contact_person }}">
+    <input type="hidden" name="contact_number" value="{{ $contact_number }}">
+    <input type="hidden" name="location" value="{{ $location }}">
+    <input type="hidden" name="location_id" value="{{ $location_id }}">
+    <input type="hidden" name="detailed_address" value="{{ $detailed_address }}">
+    <input type="hidden" name="longitude" value="{{ $longitude }}">
+    <input type="hidden" name="latitude" value="{{ $latitude }}">
     <button class="btn btn-success btn-block" type="submit">Submit</button>
 </form>
 

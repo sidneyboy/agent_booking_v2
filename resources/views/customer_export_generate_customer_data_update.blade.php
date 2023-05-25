@@ -1,5 +1,5 @@
 <form id="customer_export_generate_customer_data_update_generate_data">
-    <select name="customer_id" class="form-control select2" required>
+    <select name="customer_id" class="form-control select2" style="width:100%;" required>
         <option value="" default>SELECT CUSTOMER TO BE UPDATE</option>
         @foreach ($customer as $data)
             <option value="{{ $data->id }}">{{ $data->store_name }}</option>

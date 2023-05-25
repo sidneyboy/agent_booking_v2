@@ -107,28 +107,7 @@
                 cache: false,
                 processData: false,
                 success: function(data) {
-                    console.log(data);
                     $('#customer_export_generate_customer_page').html(data)
-                    // if (data == 'saved') {
-                    //     Swal.fire({
-                    //         position: 'top-end',
-                    //         icon: 'success',
-                    //         title: 'Location Data Uploaded',
-                    //         showConfirmButton: false,
-                    //         timer: 1500
-                    //     })
-
-                    //     $('.loading').hide();
-                    //     // location.reload();
-                    //     window.location.href = "/new_customer_generate_csv";
-                    // } else {
-                    //     Swal.fire(
-                    //         'Something went wrong!',
-                    //         data,
-                    //         'error'
-                    //     )
-                    //     $('.loading').hide();
-                    // }
                 },
             });
         }));

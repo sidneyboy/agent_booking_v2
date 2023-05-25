@@ -663,8 +663,8 @@ class Customer_controller extends Controller
 
     public function customer_export_generate_customer_data_update_generate_data(Request $request)
     {
-        return 'NO FUNCTION YET';
-        return $customer_data = Customer::find($request->input('customer_id'));
+        //return 'NO FUNCTION YET';
+        $customer_data = Customer::find($request->input('customer_id'));
         $agent_user = Agent_user::first();
         $location = location::select('id', 'location')->get();
         return view('customer_export_generate_customer_data_update_generate_data', [

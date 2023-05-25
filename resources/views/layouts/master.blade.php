@@ -458,7 +458,7 @@
 
 
 
-                            <li class="nav-item">
+                            {{-- <li class="nav-item">
                                 <a href="{{ url('new_customer') }}"
                                     class="nav-link {{ $active == 'new_customer' ? 'active' : '' }}">
                                     <i class="nav-icon fas fa-solid fa-arrow-right"></i>
@@ -466,7 +466,7 @@
                                         New Customer
                                     </p>
                                 </a>
-                            </li>
+                            </li> --}}
 
                             <li class="nav-item">
                                 <a href="{{ url('update_customer') }}"

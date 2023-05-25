@@ -172,6 +172,7 @@
 
             // Download CSV file
             downloadCSV(csv.join("\n"), filename);
+            
         }
 
         $("#customer_export").on('submit', (function(e) {
@@ -185,10 +186,10 @@
                 cache: false,
                 processData: false,
                 success: function(data) {
-                    console.log(data);
+                    //console.log(data);
 
                     $('#button_export').click();
-
+                    location.reload();
                     // if (data == 'saved') {
                     //     Swal.fire({
                     //         position: 'top-end',
