@@ -228,10 +228,12 @@ class Work_flow_controller extends Controller
 
         $new_sales_order_inventory_quantity = array_filter($request->input('new_sales_order_inventory_quantity'));
 
-        return $inventory = Inventory::whereIn('id',array_keys($new_sales_order_inventory_quantity))->get(); 
+        $inventory = Inventory::whereIn('id',array_keys($new_sales_order_inventory_quantity))->get(); 
 
 
         return view('work_flow_suggested_sales_order', [
+            'inventory' => $inventory,
+            'current_rgs' => $request->input('current_rgs'),
             'current_bo' => $request->input('current_bo'),
             'current_inventory_id' => $request->input('current_inventory_id'),
             'current_remaining_inventory' => $request->input('current_remaining_inventory'),

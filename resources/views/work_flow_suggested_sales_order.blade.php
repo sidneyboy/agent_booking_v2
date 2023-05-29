@@ -10,10 +10,67 @@
 <form id="work_flow_final_summary">
     @csrf
     <div class="table table-responsive">
-        @if (array_sum($current_bo) != 0)
-            <label>BO</label>
+        @if (array_sum($current_rgs) != 0)
+            <label>RGS</label>
             <input type="text" class="form-control form-control-sm" style="text-transform: uppercase" name="pcm_number"
                 required placeholder="PCM No">
+            <br />
+            <table class="table table-bordered table-sm table_suggested_so table-striped"
+                style="font-size:13px;width:100%;">
+                <thead>
+                    <tr>
+                        <th>Desc</th>
+                        <th>RGS</th>
+                        <th>U/P</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($current_inventory_id as $rgs_data)
+                        @if ($current_rgs[$rgs_data] != 0)
+                            <tr>
+                                <td>
+                                    <b style="color:blue">{{ $current_inventory_sku_code[$rgs_data] }}</b><br />
+                                    {{ $current_inventory_description[$rgs_data] }} <br />
+                                    <b style="color:green">{{ $sku_type }}</b>
+                                </td>
+                                <td style="text-align: right">{{ $current_rgs[$rgs_data] }}</td>
+                                <td style="text-align: right">
+                                    {{ number_format($current_inventory_unit_price[$rgs_data], 2, '.', ',') }}</td>
+                                <td style="text-align: right">
+                                    @php
+                                        $rgs_sub_total = $current_inventory_unit_price[$rgs_data] * $current_rgs[$rgs_data];
+                                        echo number_format($rgs_sub_total, 2, '.', ',');
+                                        $rgs_total[] = $rgs_sub_total;
+                                    @endphp
+                                    <input type="hidden" value="{{ $rgs_data }}" name="current_rgs_inventory_id[]">
+                                    <input type="hidden" value="{{ $current_inventory_description[$rgs_data] }}"
+                                        name="current_inventory_description[{{ $rgs_data }}]">
+                                    <input type="hidden" value="{{ $current_inventory_sku_code[$rgs_data] }}"
+                                        name="current_inventory_sku_code[{{ $rgs_data }}]">
+                                    <input type="hidden" value="{{ $current_rgs[$rgs_data] }}"
+                                        name="current_rgs[{{ $rgs_data }}]">
+                                    <input type="hidden" value="{{ $current_inventory_unit_price[$rgs_data] }}"
+                                        name="current_inventory_unit_price[{{ $rgs_data }}]">
+                                </td>
+                            </tr>
+                        @endif
+                    @endforeach
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="3" style="text-align: center">Total</th>
+                        <th style="text-align: right">{{ number_format(array_sum($rgs_total), 2, '.', ',') }}</th>
+                    </tr>
+                </tfoot>
+            </table>
+        @endif
+    </div>
+    <div class="table table-responsive">
+        @if (array_sum($current_bo) != 0)
+            <label>BO</label>
+            <input type="text" class="form-control form-control-sm" style="text-transform: uppercase"
+                name="pcm_number" required placeholder="PCM No">
             <br />
             <table class="table table-bordered table-sm table_suggested_so table-striped" style="font-size:13px;">
                 <thead>
@@ -26,32 +83,34 @@
                 </thead>
                 <tbody>
                     @foreach ($current_inventory_id as $bo_data)
-                        <tr>
-                            <td>
-                                <b style="color:blue">{{ $current_inventory_sku_code[$bo_data] }}</b><br />
-                                {{ $current_inventory_description[$bo_data] }} <br />
-                                <b style="color:green">{{ $sku_type }}</b>
-                            </td>
-                            <td style="text-align: right">{{ $current_bo[$bo_data] }}</td>
-                            <td style="text-align: right">
-                                {{ number_format($current_inventory_unit_price[$bo_data], 2, '.', ',') }}</td>
-                            <td style="text-align: right">
-                                @php
-                                    $bo_sub_total = $current_inventory_unit_price[$bo_data] * $current_bo[$bo_data];
-                                    echo number_format($bo_sub_total, 2, '.', ',');
-                                    $bo_total[] = $bo_sub_total;
-                                @endphp
-                                <input type="hidden" value="{{ $bo_data }}" name="current_bo_inventory_id[]">
-                                <input type="hidden" value="{{ $current_inventory_description[$bo_data] }}"
-                                    name="current_inventory_description[{{ $bo_data }}]">
-                                <input type="hidden" value="{{ $current_inventory_sku_code[$bo_data] }}"
-                                    name="current_inventory_sku_code[{{ $bo_data }}]">
-                                <input type="hidden" value="{{ $current_bo[$bo_data] }}"
-                                    name="current_bo[{{ $bo_data }}]">
-                                <input type="hidden" value="{{ $current_inventory_unit_price[$bo_data] }}"
-                                    name="current_inventory_unit_price[{{ $bo_data }}]">
-                            </td>
-                        </tr>
+                        @if ($current_bo[$bo_data] != 0)
+                            <tr>
+                                <td>
+                                    <b style="color:blue">{{ $current_inventory_sku_code[$bo_data] }}</b><br />
+                                    {{ $current_inventory_description[$bo_data] }} <br />
+                                    <b style="color:green">{{ $sku_type }}</b>
+                                </td>
+                                <td style="text-align: right">{{ $current_bo[$bo_data] }}</td>
+                                <td style="text-align: right">
+                                    {{ number_format($current_inventory_unit_price[$bo_data], 2, '.', ',') }}</td>
+                                <td style="text-align: right">
+                                    @php
+                                        $bo_sub_total = $current_inventory_unit_price[$bo_data] * $current_bo[$bo_data];
+                                        echo number_format($bo_sub_total, 2, '.', ',');
+                                        $bo_total[] = $bo_sub_total;
+                                    @endphp
+                                    <input type="hidden" value="{{ $bo_data }}" name="current_bo_inventory_id[]">
+                                    <input type="hidden" value="{{ $current_inventory_description[$bo_data] }}"
+                                        name="current_inventory_description[{{ $bo_data }}]">
+                                    <input type="hidden" value="{{ $current_inventory_sku_code[$bo_data] }}"
+                                        name="current_inventory_sku_code[{{ $bo_data }}]">
+                                    <input type="hidden" value="{{ $current_bo[$bo_data] }}"
+                                        name="current_bo[{{ $bo_data }}]">
+                                    <input type="hidden" value="{{ $current_inventory_unit_price[$bo_data] }}"
+                                        name="current_inventory_unit_price[{{ $bo_data }}]">
+                                </td>
+                            </tr>
+                        @endif
                     @endforeach
                 </tbody>
                 <tfoot>
@@ -137,7 +196,7 @@
                         </td>
                     </tr>
                 @endforeach
-                @foreach ($new_sales_order_inventory_quantity as $new_sales_order_inventory_id => $new_sales_order_data)
+                {{-- @foreach ($new_sales_order_inventory_quantity as $new_sales_order_inventory_id => $new_sales_order_data)
                     <tr>
                         <td>
                             <b
@@ -168,7 +227,7 @@
                                 value="{{ $new_sales_order_data }}" class="form-control form-control-sm" required>
                         </td>
                     </tr>
-                @endforeach
+                @endforeach --}}
             </tbody>
         </table>
     </div>
