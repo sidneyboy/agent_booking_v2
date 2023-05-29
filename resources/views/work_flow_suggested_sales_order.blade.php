@@ -12,8 +12,9 @@
     <div class="table table-responsive">
         @if (array_sum($current_rgs) != 0)
             <label>RGS</label>
-            <input type="text" class="form-control form-control-sm" style="text-transform: uppercase" name="pcm_number"
-                required placeholder="PCM No">
+            <input type="text" class="form-control form-control-sm" style="text-transform: uppercase" required
+                placeholder="PCM No" disabled value="{{ $rgs_pcm }}">
+            <input type="hidden" disabled value="{{ $rgs_pcm }}" name="rgs_pcm">
             <br />
             <table class="table table-bordered table-sm table_suggested_so table-striped"
                 style="font-size:13px;width:100%;">
@@ -69,8 +70,9 @@
     <div class="table table-responsive">
         @if (array_sum($current_bo) != 0)
             <label>BO</label>
-            <input type="text" class="form-control form-control-sm" style="text-transform: uppercase"
-                name="pcm_number" required placeholder="PCM No">
+            <input type="text" class="form-control form-control-sm" style="text-transform: uppercase" disabled
+                required placeholder="PCM No" value="{{ $bo_pcm }}">
+            <input type="hidden" disabled value="{{ $bo_pcm }}" name="bo_pcm">
             <br />
             <table class="table table-bordered table-sm table_suggested_so table-striped" style="font-size:13px;">
                 <thead>
@@ -196,14 +198,11 @@
                         </td>
                     </tr>
                 @endforeach
-                {{-- @foreach ($new_sales_order_inventory_quantity as $new_sales_order_inventory_id => $new_sales_order_data)
+                @foreach ($inventory as $inventory_data)
                     <tr>
                         <td>
-                            <b
-                                style="color:blue">{{ $new_sales_order_inventory_sku_code[$new_sales_order_inventory_id] }}</b><br />
-
-
-                            {{ $new_sales_order_inventory_description[$new_sales_order_inventory_id] }}<br />
+                            <b style="color:blue">{{ $inventory_data->sku_code }}</b><br />
+                            {{ $inventory_data->description }}<br />
                             <b style="color:green">{{ $sku_type }}</b>
                         </td>
                         <td style="text-align:right">0</td>
@@ -215,19 +214,20 @@
                         <td style="text-align:right">0</td>
                         <td>
                             <input type="hidden"
-                                name="sales_order_final_inventory_description[{{ $new_sales_order_inventory_id }}]"
-                                value="{{ $new_sales_order_inventory_description[$new_sales_order_inventory_id] }}">\
+                                name="sales_order_final_inventory_description[{{ $inventory_data->id }}]"
+                                value="{{ $inventory_data->description }}">
                             <input type="hidden"
-                                name="sales_order_final_inventory_sku_code[{{ $new_sales_order_inventory_id }}]"
-                                value="{{ $new_sales_order_inventory_sku_code[$new_sales_order_inventory_id] }}">
+                                name="sales_order_final_inventory_sku_code[{{ $inventory_data->id }}]"
+                                value="{{ $inventory_data->sku_code }}">
                             <input type="hidden" name="sales_order_final_inventory_id[]"
-                                value="{{ $new_sales_order_inventory_id }}">
+                                value="{{ $inventory_data->id }}">
                             <input type="number" style="width:100px;text-align:center;"
-                                name="sales_order_final_quantity[{{ $new_sales_order_inventory_id }}]" min="0"
-                                value="{{ $new_sales_order_data }}" class="form-control form-control-sm" required>
+                                name="sales_order_final_quantity[{{ $inventory_data->id }}]" min="0"
+                                value="{{ $new_sales_order_inventory_quantity[$inventory_data->id] }}"
+                                class="form-control form-control-sm" required>
                         </td>
                     </tr>
-                @endforeach --}}
+                @endforeach
             </tbody>
         </table>
     </div>

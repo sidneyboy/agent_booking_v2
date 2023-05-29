@@ -18,6 +18,8 @@ use App\Models\Sales_order_details;
 use App\Models\Sales_order;
 use App\Models\Bad_order;
 use App\Models\Bad_order_details;
+use App\Models\Return_good_stock;
+use App\Models\Return_good_stock_details;
 use App\Models\Customer_export;
 
 use App\Models\Inventory_draft;
@@ -163,7 +165,7 @@ class Work_flow_controller extends Controller
         date_default_timezone_set('Asia/Manila');
         $date = date('Y-m-d');
 
- 
+
         $new_sales_order_inventory_quantity = array_filter($request->input('new_sales_order_inventory_quantity'));
 
         return view('work_flow_suggested_sales_order', [
@@ -228,11 +230,46 @@ class Work_flow_controller extends Controller
 
         $new_sales_order_inventory_quantity = array_filter($request->input('new_sales_order_inventory_quantity'));
 
-        $inventory = Inventory::whereIn('id',array_keys($new_sales_order_inventory_quantity))->get(); 
+        $inventory = Inventory::whereIn('id', array_keys($new_sales_order_inventory_quantity))->get();
 
+        $bad_order = Bad_order::select('pcm_number')->orderBy('id', 'desc')->first();
+        $customer = Customer::select('location_id')->find($request->input('customer_id'));
+        $agent_user = Agent_user::first();
+
+        if ($bad_order != "") {
+            $var_explode = explode('-', $sales_order_data->sales_order_number);
+            $year_and_month = $var_explode[3] . "-" . $var_explode[4];
+            $series = $var_explode[5];
+
+            if ($date_receipt != $year_and_month) {
+                $sales_order_number = "SO-" .   $customer_principal_price->customer->store_name  . "-" . $agent_user->agent_id . "-" . $date_receipt  . "-0001";
+            } else {
+                $sales_order_number = "SO-" .  $customer_principal_price->customer->store_name . "-" . $agent_user->agent_id . "-" . $date_receipt . "-" . str_pad($series + 1, 4, 0, STR_PAD_LEFT);
+            }
+        } else {
+            $bo_pcm = "PCM-BO-" .  mb_substr($customer->location->location, 0, 3) . "-" . $agent_user->area . "-" . $agent_user->agent_id . "-0001";
+        }
+
+        $rgs = Return_good_stock::select('pcm_number')->orderBy('id', 'desc')->first();
+
+        if ($rgs != "") {
+            $var_explode = explode('-', $sales_order_data->sales_order_number);
+            $year_and_month = $var_explode[3] . "-" . $var_explode[4];
+            $series = $var_explode[5];
+
+            if ($date_receipt != $year_and_month) {
+                $sales_order_number = "SO-" .   $customer_principal_price->customer->store_name  . "-" . $agent_user->agent_id . "-" . $date_receipt  . "-0001";
+            } else {
+                $sales_order_number = "SO-" .  $customer_principal_price->customer->store_name . "-" . $agent_user->agent_id . "-" . $date_receipt . "-" . str_pad($series + 1, 4, 0, STR_PAD_LEFT);
+            }
+        } else {
+            $rgs_pcm = "PCM-RGS-" .  mb_substr($customer->location->location, 0, 3) . "-" . $agent_user->area . "-" . $agent_user->agent_id . "-0001";
+        }
 
         return view('work_flow_suggested_sales_order', [
             'inventory' => $inventory,
+            'bo_pcm' => $bo_pcm,
+            'rgs_pcm' => $rgs_pcm,
             'current_rgs' => $request->input('current_rgs'),
             'current_bo' => $request->input('current_bo'),
             'current_inventory_id' => $request->input('current_inventory_id'),
@@ -256,14 +293,14 @@ class Work_flow_controller extends Controller
     public function work_flow_inventory_save_as_draft(Request $request)
     {
 
-       // return $request->input();
+        // return $request->input();
         $new = new Inventory_draft([
             'customer_id' => $request->input('customer_id'),
             'principal_id' => $request->input('principal_id'),
             'sku_type' => $request->input('sku_type'),
             'sales_register_id' => $request->input('sales_register_id'),
             'date_delivered' => $request->input('date_delivered'),
-        ]);                                            
+        ]);
 
 
         $new->save();
@@ -295,7 +332,7 @@ class Work_flow_controller extends Controller
 
     public function work_flow_final_summary(Request $request)
     {
-
+        //return $request->input();
         date_default_timezone_set('Asia/Manila');
         $date = date('Y-m-d');
         $time = date('h:i:s a');

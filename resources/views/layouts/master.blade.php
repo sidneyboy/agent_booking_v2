@@ -490,6 +490,16 @@
                                 </a>
                             </li>
 
+                            <li class="nav-item">
+                                <a href="{{ url('sign_out') }}"
+                                    class="nav-link {{ $active == 'sign_out' ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-solid fa-power-off"></i>
+                                    <p>
+                                        Sign Out
+                                    </p>
+                                </a>
+                            </li>
+
                             {{-- <li class="nav-item">
                                 <a href="{{ url('collection') }}"
                                     class="nav-link {{ $active == 'collection' ? 'active' : '' }}">

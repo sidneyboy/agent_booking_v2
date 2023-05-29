@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Agent_user extends Model
+class Return_good_stock_details extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'agent_id',
-        'agent_name',
-        'area',
-        // 'agent_image',
+        'rgs_id',
+        'inventory_id',
+        'quantity',
+        'unit_price',
     ];
 }

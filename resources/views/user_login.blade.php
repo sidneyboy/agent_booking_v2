@@ -24,11 +24,11 @@
                 <form action="{{ route('user_credential')}}" method="post" enctype="multipart/form-data" accept-charset="utf-8">
                     @csrf
                     <div class="form-group">
-                        {{-- <input type="file" name="user_image" required class="form-control">
-                        <br /> --}}
-                        <input type="number" placeholder="Salesman ID" min="0" class="form-control" name="user_id" required>
+                        <input type="number" placeholder="Salesman ID" min="0" class="form-control" style="text-transform: uppercase" name="user_id" required>
                         <br />
-                        <input type="text" placeholder="Full Name" class="form-control" name="agent_name" required>
+                        <input type="text" placeholder="Full Name" class="form-control" style="text-transform: uppercase" name="agent_name" required>
+                        <br />
+                        <input type="text" placeholder="Area" class="form-control" style="text-transform: uppercase" name="area" required>
                     </div>
                     <button type="submit" class="btn btn-block btn-success">SUBMIT AGENT CREDENTIALS</button>
                     

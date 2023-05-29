@@ -22,6 +22,9 @@ Route::get('/', function () {
 Route::get('/proceed_to_controller', [App\Http\Controllers\Landing_page_controller::class, 'proceed_to_controller'])->name('proceed_to_controller');
 Route::post('/user_credential', [App\Http\Controllers\Landing_page_controller::class, 'user_credential'])->name('user_credential');
 
+Route::get('/sign_out', [App\Http\Controllers\Landing_page_controller::class, 'sign_out'])->name('sign_out');
+
+
 
 Route::get('/location_upload', [App\Http\Controllers\Location_controller::class, 'index'])->name('location_upload');
 Route::post('/location_upload_process', [App\Http\Controllers\Location_controller::class, 'location_upload_process'])->name('location_upload_process');

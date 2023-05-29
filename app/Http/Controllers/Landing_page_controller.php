@@ -9,7 +9,9 @@ use App\Models\Inventory;
 use App\Models\Principal;
 use App\Models\Sales_order;
 use App\Models\Sales_order_for_new_customer;
+use DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 
 class Landing_page_controller extends Controller
 {
@@ -61,17 +63,23 @@ class Landing_page_controller extends Controller
     public function user_credential(Request $request)
     {
 
-        // $file= $request->file('user_image');
-        // $filename= $file->getClientOriginalName();
-        // $file->move(public_path('images'), $filename);
-
         $user_save = new Agent_user([
-            'agent_id' => $request->input('user_id'),
-            'agent_name' => $request->input('agent_name'),
+            'agent_id' => strtoupper($request->input('user_id')),
+            'agent_name' => strtoupper($request->input('agent_name')),
             'agent_image' => '123123',
+            'area' => strtoupper($request->input('area')),
         ]);
 
         $user_save->save();
         return redirect('location_upload');
+    }
+
+    public function sign_out()
+    {
+        Schema::disableForeignKeyConstraints();
+        DB::table('agent_users')->truncate();
+        Schema::enableForeignKeyConstraints();
+
+        return redirect('/');
     }
 }
