@@ -351,8 +351,6 @@ class Work_flow_controller extends Controller
 
         $sales_order_data = Sales_order::select('sales_order_number')->latest()->first();
 
-
-
         if ($sales_order_data != "") {
             $var_explode = explode('-', $sales_order_data->sales_order_number);
             $year_and_month = $var_explode[3] . "-" . $var_explode[4];
@@ -381,9 +379,6 @@ class Work_flow_controller extends Controller
             ->get();
 
 
-
-
-
         return view('work_flow_final_summary', [
             'sales_order_final_inventory_description' => $request->input('sales_order_final_inventory_description'),
             'sales_order_final_inventory_sku_code' => $request->input('sales_order_final_inventory_sku_code'),
@@ -391,12 +386,21 @@ class Work_flow_controller extends Controller
             'sales_order_final_quantity' => $request->input('sales_order_final_quantity'),
             'inventory_data' => $inventory_data,
             'customer_principal_discount' => $customer_principal_discount,
-            'pcm_number' => strtoupper($request->input('pcm_number')),
-            'current_inventory_description' => $request->input('current_inventory_description'),
-            'current_inventory_sku_code' => $request->input('current_inventory_sku_code'),
-            'current_inventory_unit_price' => $request->input('current_inventory_unit_price'),
+            'bo_pcm' => strtoupper($request->input('bo_pcm')),
+            'rgs_pcm' => strtoupper($request->input('rgs_pcm')),
+            'current_bo_inventory_description' => $request->input('current_bo_inventory_description'),
+            'current_bo_inventory_sku_code' => $request->input('current_bo_inventory_sku_code'),
+            'current_bo_inventory_unit_price' => $request->input('current_bo_inventory_unit_price'),
             'current_bo' => $request->input('current_bo'),
             'current_bo_inventory_id' => $request->input('current_bo_inventory_id'),
+
+
+
+            'current_rgs_inventory_description' => $request->input('current_rgs_inventory_description'),
+            'current_rgs_inventory_sku_code' => $request->input('current_rgs_inventory_sku_code'),
+            'current_rgs_inventory_unit_price' => $request->input('current_rgs_inventory_unit_price'),
+            'current_rgs' => $request->input('current_rgs'),
+            'current_rgs_inventory_id' => $request->input('current_rgs_inventory_id'),
             'sales_register_id' => $request->input('sales_register_id'),
         ])->with('customer_principal_price', $customer_principal_price)
             ->with('principal_id', $request->input('principal_id'))
@@ -483,13 +487,14 @@ class Work_flow_controller extends Controller
         date_default_timezone_set('Asia/Manila');
         $date = date('Y-m-d');
 
-        $pcm_number = $request->input('pcm_number');
+        $bo_pcm = $request->input('bo_pcm');
+        $rgs_pcm = $request->input('rgs_pcm');
 
 
 
-        if (isset($pcm_number)) {
+        if (isset($bo_pcm)) {
             $bad_order_save = new Bad_order([
-                'pcm_number' => $request->input('pcm_number'),
+                'pcm_number' => $request->input('bo_pcm'),
                 'total_bo' => $request->input('total_bo_amount'),
                 'agent_id' => $request->input('agent_id'),
                 'customer_id' => $request->input('customer_id'),
@@ -509,6 +514,31 @@ class Work_flow_controller extends Controller
                 ]);
 
                 $bad_order_details_save->save();
+            }
+        }
+
+        if (isset($rgs_pcm)) {
+            $rgs = new Return_good_stock([
+                'pcm_number' => $request->input('rgs_pcm'),
+                'total_bo' => $request->input('total_rgs_amount'),
+                'agent_id' => $request->input('agent_id'),
+                'customer_id' => $request->input('customer_id'),
+                'principal_id' => $request->input('principal_id'),
+                'sales_register_id' => $request->input('sales_register_id'),
+                'amount_paid' => 0,
+            ]);
+
+            $rgs->save();
+
+            foreach ($request->input('current_rgs_inventory_id') as $key => $rgs_data) {
+                $rgs_details_save = new Return_good_stock_details([
+                    'rgs_id' => $rgs->id,
+                    'inventory_id' => $rgs_data,
+                    'quantity' => $request->input('current_rgs_quantity')[$rgs_data],
+                    'unit_price' => $request->input('current_rgs_unit_price')[$rgs_data],
+                ]);
+
+                $rgs_details_save->save();
             }
         }
 

@@ -15,4 +15,14 @@ class Return_good_stock_details extends Model
         'quantity',
         'unit_price',
     ];
+
+    public function inventory()
+    {
+        return $this->belongsTo('App\Models\Inventory', 'inventory_id');
+    }
+
+    public function pcm()
+    {
+        return $this->belongsTo('App\Models\Return_good_stock', 'rgs_id');
+    }
 }

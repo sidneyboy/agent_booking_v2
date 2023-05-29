@@ -23,7 +23,7 @@
         font-family: Arial, Helvetica, sans-serif;
         padding: 0px;
         background-color: white,
-        vertical-align: middle;
+            vertical-align: middle;
     }
 </style>
 
@@ -35,12 +35,12 @@
                 <table class="table table-bordered table-sm table-striped table_suggested_so">
                     <thead>
                         <tr>
-                            <th colspan="4" style="color:blue">THIS WILL SERVE AS UNOFFICIAL PCM</th>
+                            <th colspan="4" style="color:blue">THIS WILL SERVE AS UNOFFICIAL BO PCM</th>
                         </tr>
                         <tr>
                             <th colspan="4">
-                                PCM NO - {{ $pcm_number }}
-                                <input type="hidden" value="{{ $pcm_number }}" name="pcm_number">
+                                {{ $bo_pcm }}
+                                <input type="hidden" value="{{ $bo_pcm }}" name="bo_pcm">
                             </th>
                         </tr>
                         <tr>
@@ -54,24 +54,24 @@
                         @foreach ($current_bo_inventory_id as $bo_data)
                             <tr>
                                 <td>
-                                    <b style="color:blue">{{ $current_inventory_sku_code[$bo_data] }}</b><br />
-                                    
-                                    {{ $current_inventory_description[$bo_data] }} <br />
+                                    <b style="color:blue">{{ $current_bo_inventory_sku_code[$bo_data] }}</b><br />
+
+                                    {{ $current_bo_inventory_description[$bo_data] }} <br />
                                     <b style="color:green">{{ $sku_type }}</b>
-                                
+
                                 </td>
                                 <td style="text-align: right">{{ $current_bo[$bo_data] }}</td>
                                 <td style="text-align: right">
-                                    {{ number_format($current_inventory_unit_price[$bo_data], 2, '.', ',') }}</td>
+                                    {{ number_format($current_bo_inventory_unit_price[$bo_data], 2, '.', ',') }}</td>
                                 <td style="text-align: right">
                                     @php
-                                        $bo_sub_total = $current_inventory_unit_price[$bo_data] * $current_bo[$bo_data];
+                                        $bo_sub_total = $current_bo_inventory_unit_price[$bo_data] * $current_bo[$bo_data];
                                         echo number_format($bo_sub_total, 2, '.', ',');
                                         $bo_total[] = $bo_sub_total;
                                     @endphp
                                     <input type="hidden" value="{{ $bo_data }}" name="current_bo_inventory_id[]">
 
-                                    <input type="hidden" value="{{ $current_inventory_unit_price[$bo_data] }}"
+                                    <input type="hidden" value="{{ $current_bo_inventory_unit_price[$bo_data] }}"
                                         name="current_bo_unit_price[{{ $bo_data }}]">
                                     <input type="hidden" value="{{ $current_bo[$bo_data] }}"
                                         name="current_bo_quantity[{{ $bo_data }}]">
@@ -85,6 +85,72 @@
                             <th style="text-align: right">
                                 {{ number_format(array_sum($bo_total), 2, '.', ',') }}
                                 <input type="hidden" value="{{ array_sum($bo_total) }}" name="total_bo_amount">
+                            </th>
+                        </tr>
+                    </tfoot>
+                </table>
+            @endif
+        @endif
+
+
+
+
+        @if (isset($current_rgs))
+            @if (array_sum($current_rgs) != 0)
+                <table class="table table-bordered table-sm table-striped table_suggested_so">
+                    <thead>
+                        <tr>
+                            <th colspan="4" style="color:blue">THIS WILL SERVE AS UNOFFICIAL RGS PCM</th>
+                        </tr>
+                        <tr>
+                            <th colspan="4">
+                                {{ $rgs_pcm }}
+                                <input type="hidden" value="{{ $rgs_pcm }}" name="rgs_pcm">
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Desc</th>
+                            <th>BO</th>
+                            <th>U/P</th>
+                            <th>Sub Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($current_rgs_inventory_id as $rgs_data)
+                            <tr>
+                                <td>
+                                    <b style="color:blue">{{ $current_rgs_inventory_sku_code[$rgs_data] }}</b><br />
+
+                                    {{ $current_rgs_inventory_description[$rgs_data] }} <br />
+                                    <b style="color:green">{{ $sku_type }}</b>
+
+                                </td>
+                                <td style="text-align: right">{{ $current_rgs[$rgs_data] }}</td>
+                                <td style="text-align: right">
+                                    {{ number_format($current_rgs_inventory_unit_price[$rgs_data], 2, '.', ',') }}</td>
+                                <td style="text-align: right">
+                                    @php
+                                        $rgs_sub_total = $current_rgs_inventory_unit_price[$rgs_data] * $current_rgs[$rgs_data];
+                                        echo number_format($rgs_sub_total, 2, '.', ',');
+                                        $rgs_total[] = $rgs_sub_total;
+                                    @endphp
+                                    <input type="hidden" value="{{ $rgs_data }}"
+                                        name="current_rgs_inventory_id[]">
+
+                                    <input type="hidden" value="{{ $current_rgs_inventory_unit_price[$rgs_data] }}"
+                                        name="current_rgs_unit_price[{{ $rgs_data }}]">
+                                    <input type="hidden" value="{{ $current_rgs[$rgs_data] }}"
+                                        name="current_rgs_quantity[{{ $rgs_data }}]">
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="3" style="text-align: center">Total</th>
+                            <th style="text-align: right">
+                                {{ number_format(array_sum($rgs_total), 2, '.', ',') }}
+                                <input type="hidden" value="{{ array_sum($rgs_total) }}" name="total_rgs_amount">
                             </th>
                         </tr>
                     </tfoot>
@@ -130,51 +196,54 @@
             </thead>
             <tbody>
                 @foreach ($inventory_data as $data)
-                    <tr>
-                        <th>
-                            <b style="color:blue">{{ $data->sku_code }}</b><br />
-                            
-                            {{ $data->description }}<br />
-                            <b style="color:green">{{ $data->uom }}<b/></th>
-                        <th style="text-align: right">{{ $sales_order_final_quantity[$data->id] }}</th>
-                        <th style="text-align: right">
-                            @if ($customer_principal_price->price_level == 'price_1')
-                                @php
-                                    $unit_price = $data->price_1;
-                                @endphp
-                                {{ number_format($data->price_1, 2, '.', ',') }}
-                            @elseif($customer_principal_price->price_level == 'price_2')
-                                @php
-                                    $unit_price = $data->price_2;
-                                @endphp
-                                {{ number_format($data->price_2, 2, '.', ',') }}
-                            @elseif($customer_principal_price->price_level == 'price_3')
-                                @php
-                                    $unit_price = $data->price_3;
-                                @endphp
-                                {{ number_format($data->price_3, 2, '.', ',') }}
-                            @elseif($customer_principal_price->price_level == 'price_4')
-                                @php
-                                    $unit_price = $data->price_4;
-                                @endphp
-                                {{ number_format($data->price_4, 2, '.', ',') }}
-                            @endif
+                    @if ($sales_order_final_quantity[$data->id] != 0)
+                        <tr>
+                            <th>
+                                <b style="color:blue">{{ $data->sku_code }}</b><br />
 
-                            <input type="hidden" value="{{ $unit_price }}" name="unit_price[{{ $data->id }}]">
-                        </th>
-                        <th style="text-align: right">
-                            @php
-                                $sub_total = $unit_price * $sales_order_final_quantity[$data->id];
-                                echo number_format($sub_total, 2, '.', ',');
-                                $sum_total[] = $sub_total;
-                            @endphp
+                                {{ $data->description }}<br />
+                                <b style="color:green">{{ $data->uom }}<b />
+                            </th>
+                            <th style="text-align: right">{{ $sales_order_final_quantity[$data->id] }}</th>
+                            <th style="text-align: right">
+                                @if ($customer_principal_price->price_level == 'price_1')
+                                    @php
+                                        $unit_price = $data->price_1;
+                                    @endphp
+                                    {{ number_format($data->price_1, 2, '.', ',') }}
+                                @elseif($customer_principal_price->price_level == 'price_2')
+                                    @php
+                                        $unit_price = $data->price_2;
+                                    @endphp
+                                    {{ number_format($data->price_2, 2, '.', ',') }}
+                                @elseif($customer_principal_price->price_level == 'price_3')
+                                    @php
+                                        $unit_price = $data->price_3;
+                                    @endphp
+                                    {{ number_format($data->price_3, 2, '.', ',') }}
+                                @elseif($customer_principal_price->price_level == 'price_4')
+                                    @php
+                                        $unit_price = $data->price_4;
+                                    @endphp
+                                    {{ number_format($data->price_4, 2, '.', ',') }}
+                                @endif
 
-                            <input type="hidden" value="{{ $data->id }}" name="inventory_id[]">
-                            <input type="hidden" value="{{ $sales_order_final_quantity[$data->id] }}"
-                                name="sales_order_quantity[{{ $data->id }}]">
+                                <input type="hidden" value="{{ $unit_price }}"
+                                    name="unit_price[{{ $data->id }}]">
+                            </th>
+                            <th style="text-align: right">
+                                @php
+                                    $sub_total = $unit_price * $sales_order_final_quantity[$data->id];
+                                    echo number_format($sub_total, 2, '.', ',');
+                                    $sum_total[] = $sub_total;
+                                @endphp
 
-                        </th>
-                    </tr>
+                                <input type="hidden" value="{{ $data->id }}" name="inventory_id[]">
+                                <input type="hidden" value="{{ $sales_order_final_quantity[$data->id] }}"
+                                    name="sales_order_quantity[{{ $data->id }}]">
+                            </th>
+                        </tr>
+                    @endif
                 @endforeach
             </tbody>
             <tfoot>
@@ -289,20 +358,23 @@
             processData: false,
             success: function(data) {
                 $('.loading').hide();
-                if (data == "saved") {
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Your work has been saved',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                    window.location.href = "/work_flow";
-                } else {
-                    alert('asdasd');
-                }
-
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Your work has been saved',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                window.location.href = "/work_flow";
             },
+            error: function(error) {
+                $('.loading').hide();
+                Swal.fire(
+                    'Cannot Proceed',
+                    'Please Contact IT Support',
+                    'error'
+                )
+            }
         });
     }));
 

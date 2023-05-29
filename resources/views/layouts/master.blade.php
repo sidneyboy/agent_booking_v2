@@ -420,6 +420,16 @@
                                             </p>
                                         </a>
                                     </li>
+
+                                    <li class="nav-item">
+                                        <a href="{{ url('pcm_export') }}"
+                                            class="nav-link {{ $active == 'pcm_export' ? 'active' : '' }}">
+                                            <i class="nav-icon fas fa-solid fa-arrow-right"></i>
+                                            <p>
+                                                PCM
+                                            </p>
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
 

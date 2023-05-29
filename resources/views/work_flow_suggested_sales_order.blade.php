@@ -14,7 +14,7 @@
             <label>RGS</label>
             <input type="text" class="form-control form-control-sm" style="text-transform: uppercase" required
                 placeholder="PCM No" disabled value="{{ $rgs_pcm }}">
-            <input type="hidden" disabled value="{{ $rgs_pcm }}" name="rgs_pcm">
+            <input type="hidden" value="{{ $rgs_pcm }}" name="rgs_pcm">
             <br />
             <table class="table table-bordered table-sm table_suggested_so table-striped"
                 style="font-size:13px;width:100%;">
@@ -46,13 +46,13 @@
                                     @endphp
                                     <input type="hidden" value="{{ $rgs_data }}" name="current_rgs_inventory_id[]">
                                     <input type="hidden" value="{{ $current_inventory_description[$rgs_data] }}"
-                                        name="current_inventory_description[{{ $rgs_data }}]">
+                                        name="current_rgs_inventory_description[{{ $rgs_data }}]">
                                     <input type="hidden" value="{{ $current_inventory_sku_code[$rgs_data] }}"
-                                        name="current_inventory_sku_code[{{ $rgs_data }}]">
+                                        name="current_rgs_inventory_sku_code[{{ $rgs_data }}]">
                                     <input type="hidden" value="{{ $current_rgs[$rgs_data] }}"
                                         name="current_rgs[{{ $rgs_data }}]">
                                     <input type="hidden" value="{{ $current_inventory_unit_price[$rgs_data] }}"
-                                        name="current_inventory_unit_price[{{ $rgs_data }}]">
+                                        name="current_rgs_inventory_unit_price[{{ $rgs_data }}]">
                                 </td>
                             </tr>
                         @endif
@@ -72,7 +72,7 @@
             <label>BO</label>
             <input type="text" class="form-control form-control-sm" style="text-transform: uppercase" disabled
                 required placeholder="PCM No" value="{{ $bo_pcm }}">
-            <input type="hidden" disabled value="{{ $bo_pcm }}" name="bo_pcm">
+            <input type="hidden" value="{{ $bo_pcm }}" name="bo_pcm">
             <br />
             <table class="table table-bordered table-sm table_suggested_so table-striped" style="font-size:13px;">
                 <thead>
@@ -103,13 +103,13 @@
                                     @endphp
                                     <input type="hidden" value="{{ $bo_data }}" name="current_bo_inventory_id[]">
                                     <input type="hidden" value="{{ $current_inventory_description[$bo_data] }}"
-                                        name="current_inventory_description[{{ $bo_data }}]">
+                                        name="current_bo_inventory_description[{{ $bo_data }}]">
                                     <input type="hidden" value="{{ $current_inventory_sku_code[$bo_data] }}"
-                                        name="current_inventory_sku_code[{{ $bo_data }}]">
+                                        name="current_bo_inventory_sku_code[{{ $bo_data }}]">
                                     <input type="hidden" value="{{ $current_bo[$bo_data] }}"
                                         name="current_bo[{{ $bo_data }}]">
                                     <input type="hidden" value="{{ $current_inventory_unit_price[$bo_data] }}"
-                                        name="current_inventory_unit_price[{{ $bo_data }}]">
+                                        name="current_bo_inventory_unit_price[{{ $bo_data }}]">
                                 </td>
                             </tr>
                         @endif

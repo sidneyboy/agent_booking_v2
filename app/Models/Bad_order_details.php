@@ -15,4 +15,15 @@ class Bad_order_details extends Model
         'quantity',
         'unit_price',
     ];
+    
+
+    public function inventory()
+    {
+        return $this->belongsTo('App\Models\Inventory', 'inventory_id');
+    }
+
+    public function pcm()
+    {
+        return $this->belongsTo('App\Models\Bad_order', 'bad_order_id');
+    }
 }

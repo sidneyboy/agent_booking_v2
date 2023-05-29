@@ -135,3 +135,8 @@ Route::post('/customer_export_generate_customer_data_update_generate_data', [App
 Route::get('/sales_order_export', [App\Http\Controllers\Sales_order_export_controller::class, 'index'])->name('sales_order_export');
 Route::post('/sales_order_export_process', [App\Http\Controllers\Sales_order_export_controller::class, 'sales_order_export_process'])->name('sales_order_export_process');
 Route::post('/sales_order_new_customer_export_process', [App\Http\Controllers\Sales_order_export_controller::class, 'sales_order_new_customer_export_process'])->name('sales_order_new_customer_export_process');
+
+
+Route::get('/pcm_export', [App\Http\Controllers\Pcm_export_controller::class, 'index'])->name('pcm_export');
+Route::post('/pcm_export_generate', [App\Http\Controllers\Pcm_export_controller::class, 'pcm_export_generate'])->name('pcm_export_generate');
+

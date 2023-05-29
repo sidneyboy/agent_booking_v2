@@ -16,4 +16,9 @@ class Return_good_stock extends Model
         'customer_id',
         'principal_id',
     ];
+
+    public function customer()
+    {
+        return $this->belongsTo('App\Models\Customer', 'customer_id');
+    }
 }

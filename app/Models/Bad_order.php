@@ -17,4 +17,9 @@ class Bad_order extends Model
         'principal_id',
         'sales_register_id',
     ];
+
+    public function customer()
+    {
+        return $this->belongsTo('App\Models\Customer', 'customer_id');
+    }
 }
