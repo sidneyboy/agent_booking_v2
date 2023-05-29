@@ -15,6 +15,7 @@ class Inventory_draft_details extends Model
         'remaining_quantity',
         'delivered_quantity',
         'bo',
+        'rgs',
         'unit_price',
         'sku_type',
     ];

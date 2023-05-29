@@ -88,60 +88,101 @@ class Work_flow_controller extends Controller
                     ->with('sku_type', $request->input('sku_type'))
                     ->with('customer_id', $request->input('customer'));
             } else {
-                $sales_register = Sales_register::select('id', 'date_delivered')
-                    ->where('customer_id', $request->input('customer'))
+                // $sales_register = Sales_register::select('id', 'date_delivered')
+                //     ->where('customer_id', $request->input('customer'))
+                //     ->where('principal_id', $request->input('principal'))
+                //     ->where('sku_type', $request->input('sku_type'))
+                //     ->latest()
+                //     ->first();
+
+                // $customer = Customer::find($request->input('customer'));
+                // $customer_principal_check = Customer_principal_price::where('customer_id', $customer->id)
+                //     ->where('principal_id', $request->input('principal'))
+                //     ->first();
+
+                // if ($customer_principal_check) {
+                //     if ($customer_principal_check->price_level == 'none') {
+                //         return 'Cannot Proceed. Please Change Price Level of this customer base on the selected principal!';
+                //     } else {
+                //         if ($sales_register) {
+
+                //             foreach ($sales_register->sales_register_details_for_inventory_filter as $key => $data) {
+                //                 $registered_inventory[] = $data->inventory_id;
+                //             }
+
+                //             $sales_order_inventory =  Inventory::select('sku_type', 'description', 'sku_code', 'id')
+                //                 ->where('principal_id', $request->input('principal'))
+                //                 ->where('sku_type', $request->input('sku_type'))
+                //                 ->whereNotIn('id', $registered_inventory)
+                //                 ->get();
+
+                //             return view('work_flow_show_inventory', [
+                //                 'sales_register' => $sales_register,
+                //                 'sales_order_inventory' => $sales_order_inventory,
+                //                 'customer' => $customer,
+                //             ])->with('customer_id', $request->input('customer'))
+                //                 ->with('principal_id', $request->input('principal'))
+                //                 ->with('sku_type', $request->input('sku_type'));
+                //         } else {
+                //             $sales_order_inventory =  Inventory::select('sku_type', 'description', 'sku_code', 'id')
+                //                 ->where('principal_id', $request->input('principal'))
+                //                 ->where('sku_type', $request->input('sku_type'))
+                //                 ->get();
+
+                //             return view('work_flow_no_inventory', [
+                //                 'sales_order_inventory' => $sales_order_inventory,
+                //                 'customer' => $customer,
+                //             ])->with('customer_id', $request->input('customer'))
+                //                 ->with('principal_id', $request->input('principal'))
+                //                 ->with('sku_type', $request->input('sku_type'));
+                //         }
+                //     }
+                // } else {
+                //     return 'You need to input Customer Principal Price Level.';
+                // }
+
+
+                $sales_order_inventory =  Inventory::select('sku_type', 'description', 'sku_code', 'id', 'sku_code')
                     ->where('principal_id', $request->input('principal'))
                     ->where('sku_type', $request->input('sku_type'))
-                    ->latest()
-                    ->first();
+                    // ->whereNotIn('id', $registered_inventory)
+                    ->get();
 
-                $customer = Customer::find($request->input('customer'));
-                $customer_principal_check = Customer_principal_price::where('customer_id', $customer->id)
-                    ->where('principal_id', $request->input('principal'))
-                    ->first();
-
-                if ($customer_principal_check) {
-                    if ($customer_principal_check->price_level == 'none') {
-                        return 'Cannot Proceed. Please Change Price Level of this customer base on the selected principal!';
-                    } else {
-                        if ($sales_register) {
-
-                            foreach ($sales_register->sales_register_details_for_inventory_filter as $key => $data) {
-                                $registered_inventory[] = $data->inventory_id;
-                            }
-
-                            $sales_order_inventory =  Inventory::select('sku_type', 'description', 'sku_code', 'id')
-                                ->where('principal_id', $request->input('principal'))
-                                ->where('sku_type', $request->input('sku_type'))
-                                ->whereNotIn('id', $registered_inventory)
-                                ->get();
-
-                            return view('work_flow_show_inventory', [
-                                'sales_register' => $sales_register,
-                                'sales_order_inventory' => $sales_order_inventory,
-                                'customer' => $customer,
-                            ])->with('customer_id', $request->input('customer'))
-                                ->with('principal_id', $request->input('principal'))
-                                ->with('sku_type', $request->input('sku_type'));
-                        } else {
-                            $sales_order_inventory =  Inventory::select('sku_type', 'description', 'sku_code', 'id')
-                                ->where('principal_id', $request->input('principal'))
-                                ->where('sku_type', $request->input('sku_type'))
-                                ->get();
-
-                            return view('work_flow_no_inventory', [
-                                'sales_order_inventory' => $sales_order_inventory,
-                                'customer' => $customer,
-                            ])->with('customer_id', $request->input('customer'))
-                                ->with('principal_id', $request->input('principal'))
-                                ->with('sku_type', $request->input('sku_type'));
-                        }
-                    }
-                } else {
-                    return 'You need to input Customer Principal Price Level.';
-                }
+                return view('work_flow_proceed_to_pre_inventory_draft_data', [
+                    'check_inventory_draft' => $check_inventory_draft,
+                    'sales_order_inventory' => $sales_order_inventory,
+                ])->with('principal_id', $request->input('principal'))
+                    ->with('sku_type', $request->input('sku_type'))
+                    ->with('customer_id', $request->input('customer'));
             }
         }
+    }
+
+    public function work_flow_suggested_sales_order_data(Request $request)
+    {
+        date_default_timezone_set('Asia/Manila');
+        $date = date('Y-m-d');
+
+        $new_sales_order_inventory_quantity = array_filter($request->input('new_sales_order_inventory_quantity'));
+
+        return view('work_flow_suggested_sales_order', [
+            'current_bo' => $request->input('current_bo'),
+            'current_inventory_id' => $request->input('current_inventory_id'),
+            'current_remaining_inventory' => $request->input('current_remaining_inventory'),
+            'current_inventory_description' => $request->input('current_inventory_description'),
+            'current_inventory_sku_code' => $request->input('current_inventory_sku_code'),
+            'prev_delivered_inventory' => $request->input('prev_delivered_inventory'),
+            'new_sales_order_inventory_id' => $request->input('new_sales_order_inventory_id'),
+            'new_sales_order_inventory_quantity' => $new_sales_order_inventory_quantity,
+            'new_sales_order_inventory_description' => $request->input('new_sales_order_inventory_description'),
+            'new_sales_order_inventory_sku_code' => $request->input('new_sales_order_inventory_sku_code'),
+            'current_inventory_unit_price' => $request->input('current_inventory_unit_price'),
+            'sales_register_id' => $request->input('sales_register_id'),
+        ])->with('date_delivered', $request->input('date_delivered'))
+            ->with('principal_id', $request->input('principal_id'))
+            ->with('customer_id', $request->input('customer_id'))
+            ->with('sku_type', $request->input('sku_type'))
+            ->with('date', $date);
     }
 
     public function work_flow_check_customer_sales_order_status(Request $request)
@@ -209,24 +250,28 @@ class Work_flow_controller extends Controller
     {
 
         //return $request->input();
-        $new = new Inventory_draft([
-            'customer_id' => $request->input('customer_id'),
-            'principal_id' => $request->input('principal_id'),
-            'sku_type' => $request->input('sku_type'),
-            'sales_register_id' => $request->input('sales_register_id'),
-            'date_delivered' => $request->input('date_delivered'),
-        ]);
+        // $new = new Inventory_draft([
+        //     'customer_id' => $request->input('customer_id'),
+        //     'principal_id' => $request->input('principal_id'),
+        //     'sku_type' => $request->input('sku_type'),
+        //     'sales_register_id' => $request->input('sales_register_id'),
+        //     'date_delivered' => $request->input('date_delivered'),
+        // ]);
 
-        $new->save();
+        // $new->save();
 
+        $current_remaining_inventory = array_filter($request->input('current_remaining_inventory'));
+        $current_bo = array_filter($request->input('current_bo'));
+        $current_rgs = array_filter($request->input('current_rgs'));
         foreach ($request->input('current_inventory_id') as $key => $data) {
             $new_inventory_draft_details = new Inventory_draft_details([
-                'inventory_draft_id' => $new->id,
+                'inventory_draft_id' => 1,
                 'inventory_id' => $data,
-                'remaining_quantity' => $request->input('current_remaining_inventory')[$data],
-                'bo' => $request->input('current_bo')[$data],
-                'delivered_quantity' => $request->input('prev_delivered_inventory')[$data],
-                'unit_price' => $request->input('current_inventory_unit_price')[$data],
+                'remaining_quantity' => $current_remaining_inventory[$data],
+                'bo' => $current_bo[$data],
+                'rgs' => $current_rgs[$data],
+                'delivered_quantity' => 0,
+                'unit_price' => 0,
                 'sku_type' => $request->input('sku_type'),
             ]);
 

@@ -18,8 +18,8 @@ return new class extends Migration
             $table->BigInteger('customer_id');
             $table->string('principal_id');
             $table->string('sku_type');
-            $table->BigInteger('sales_register_id');
-            $table->string('date_delivered');
+            $table->BigInteger('sales_register_id')->nullable();
+            $table->string('date_delivered')->nullable();
             $table->string('status')->nullable();
             $table->timestamps();
         });

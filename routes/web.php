@@ -67,6 +67,7 @@ Route::post('/work_flow_proceed_to_pre_inventory', [App\Http\Controllers\Work_fl
 
 
 
+Route::post('/work_flow_suggested_sales_order_data', [App\Http\Controllers\Work_flow_controller::class, 'work_flow_suggested_sales_order_data'])->name('work_flow_suggested_sales_order_data');
 
 Route::post('/work_flow_suggested_sales_order', [App\Http\Controllers\Work_flow_controller::class, 'work_flow_suggested_sales_order'])->name('work_flow_suggested_sales_order');
 Route::post('/work_flow_final_summary', [App\Http\Controllers\Work_flow_controller::class, 'work_flow_final_summary'])->name('work_flow_final_summary');
