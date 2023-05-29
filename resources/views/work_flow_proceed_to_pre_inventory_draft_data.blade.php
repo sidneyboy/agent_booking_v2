@@ -85,15 +85,15 @@
                     processData: false,
                     success: function(data) {
                         $('.loading').hide();
-                        // if (data == 'saved') {
-                        //     Swal.fire(
-                        //         'Work saved to Draft',
-                        //         '',
-                        //         'success'
-                        //     )
-                        //     window.location.href = "/work_flow";
-                        // }
-                        console.log(data);
+                        if (data == 'saved') {
+                            Swal.fire(
+                                'Work saved to Draft',
+                                '',
+                                'success'
+                            )
+                            window.location.href = "/work_flow";
+                        }
+                        // console.log(data);
                     },
                 });
             } else if (result.isDenied) {

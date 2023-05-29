@@ -163,10 +163,12 @@ class Work_flow_controller extends Controller
         date_default_timezone_set('Asia/Manila');
         $date = date('Y-m-d');
 
+ 
         $new_sales_order_inventory_quantity = array_filter($request->input('new_sales_order_inventory_quantity'));
 
         return view('work_flow_suggested_sales_order', [
             'current_bo' => $request->input('current_bo'),
+            'current_rgs' => $request->input('current_rgs'),
             'current_inventory_id' => $request->input('current_inventory_id'),
             'current_remaining_inventory' => $request->input('current_remaining_inventory'),
             'current_inventory_description' => $request->input('current_inventory_description'),
@@ -226,6 +228,9 @@ class Work_flow_controller extends Controller
 
         $new_sales_order_inventory_quantity = array_filter($request->input('new_sales_order_inventory_quantity'));
 
+        return $inventory = Inventory::whereIn('id',array_keys($new_sales_order_inventory_quantity))->get(); 
+
+
         return view('work_flow_suggested_sales_order', [
             'current_bo' => $request->input('current_bo'),
             'current_inventory_id' => $request->input('current_inventory_id'),
@@ -249,33 +254,38 @@ class Work_flow_controller extends Controller
     public function work_flow_inventory_save_as_draft(Request $request)
     {
 
-        //return $request->input();
-        // $new = new Inventory_draft([
-        //     'customer_id' => $request->input('customer_id'),
-        //     'principal_id' => $request->input('principal_id'),
-        //     'sku_type' => $request->input('sku_type'),
-        //     'sales_register_id' => $request->input('sales_register_id'),
-        //     'date_delivered' => $request->input('date_delivered'),
-        // ]);
+       // return $request->input();
+        $new = new Inventory_draft([
+            'customer_id' => $request->input('customer_id'),
+            'principal_id' => $request->input('principal_id'),
+            'sku_type' => $request->input('sku_type'),
+            'sales_register_id' => $request->input('sales_register_id'),
+            'date_delivered' => $request->input('date_delivered'),
+        ]);                                            
 
-        // $new->save();
 
-        $current_remaining_inventory = array_filter($request->input('current_remaining_inventory'));
-        $current_bo = array_filter($request->input('current_bo'));
-        $current_rgs = array_filter($request->input('current_rgs'));
+        $new->save();
+
+        $current_remaining_inventory = $request->input('current_remaining_inventory');
+        $current_bo = $request->input('current_bo');
+        $current_rgs = $request->input('current_rgs');
+
         foreach ($request->input('current_inventory_id') as $key => $data) {
-            $new_inventory_draft_details = new Inventory_draft_details([
-                'inventory_draft_id' => 1,
-                'inventory_id' => $data,
-                'remaining_quantity' => $current_remaining_inventory[$data],
-                'bo' => $current_bo[$data],
-                'rgs' => $current_rgs[$data],
-                'delivered_quantity' => 0,
-                'unit_price' => 0,
-                'sku_type' => $request->input('sku_type'),
-            ]);
+            $pass = $current_remaining_inventory[$data] + $current_bo[$data] + $current_rgs[$data];
+            if ($pass != 0) {
+                $new_inventory_draft_details = new Inventory_draft_details([
+                    'inventory_draft_id' => $new->id,
+                    'inventory_id' => $data,
+                    'remaining_quantity' => $current_remaining_inventory[$data],
+                    'bo' => $current_bo[$data],
+                    'rgs' => $current_rgs[$data],
+                    'delivered_quantity' => 0,
+                    'unit_price' => 0,
+                    'sku_type' => $request->input('sku_type'),
+                ]);
 
-            $new_inventory_draft_details->save();
+                $new_inventory_draft_details->save();
+            }
         }
 
         return 'saved';

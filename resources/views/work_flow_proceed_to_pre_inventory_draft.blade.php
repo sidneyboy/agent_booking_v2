@@ -10,13 +10,14 @@
 <form id="work_flow_proceed_to_pre_inventory_draft_suggested_sales_order">
     @csrf
     <div class="table table-responsive">
-        <table class="table table-sm table-bordered table-striped" style="font-size:13px;">
+        <table class="table table-sm table-bordered table-striped table_suggested_so" style="font-size:13px;width:100%;">
             <thead>
                 <tr>
-                    <th colspan="3" style="color:blue;">CUSTOMER CURRENT INVENTORY DRAFT</th>
+                    <th colspan="4" style="color:blue;">CUSTOMER CURRENT INVENTORY DRAFT</th>
                 </tr>
                 <tr>
                     <th>Desc</th>
+                    <th>RGS</th>
                     <th>BO</th>
                     <th>Remaining</th>
                 </tr>
@@ -35,6 +36,12 @@
                                 value="{{ $data->inventory->description }}">
                             <input type="hidden" name="current_inventory_unit_price[{{ $data->inventory_id }}]"
                                 value="{{ $data->unit_price }}">
+                        </td>
+                        <td>
+                            <input style="width:100px;text-align:center;" name="current_rgs[{{ $data->inventory_id }}]"
+                                type="number" min="0" value="{{ $data->rgs }}" required
+                                class="form-control form-control-sm">
+
                         </td>
                         <td>
                             <input style="width:100px;text-align:center;" name="current_bo[{{ $data->inventory_id }}]"
@@ -74,10 +81,10 @@
                             {{ $data->description }} <br />
                             <b style="color:green;"> {{ $data->sku_type }}</b>
                             <input type="hidden" name="new_sales_order_inventory_id[]" value="{{ $data->id }}">
-                            <input type="hidden" name="new_sales_order_inventory_description[{{ $data->id }}]"
+                            {{-- <input type="hidden" name="new_sales_order_inventory_description[{{ $data->id }}]"
                                 value="{{ $data->description }}">
                             <input type="hidden" name="new_sales_order_inventory_sku_code[{{ $data->id }}]"
-                                value="{{ $data->sku_code }}">
+                                value="{{ $data->sku_code }}"> --}}
                         </td>
                         <td><input style="width:100px;text-align:center;"
                                 name="new_sales_order_inventory_quantity[{{ $data->id }}]" type="number"
