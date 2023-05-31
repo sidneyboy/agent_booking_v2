@@ -3,7 +3,7 @@
         <thead>
             <tr>
                 <th>{{ $details[0]->pcm->customer->store_name }}</th>
-                <th></th>
+                <th>{{ $details[0]->pcm->customer_id }}</th>
                 <th></th>
                 <th></th>
                 <th></th>
@@ -11,10 +11,10 @@
             </tr>
             <tr>
                 <th>{{ $agent_user->agent_name }}</th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
+                <th>{{ $details[0]->pcm->principal->principal }}</th>
+                <th>{{ $details[0]->pcm->principal_id }}</th>
+                <th>{{ $details[0]->pcm->agent_id }}</th>
+                <th>{{ $details[0]->inventory->sku_type }}</th>
                 <th>{{ $details[0]->pcm->created_at }}</th>
             </tr>
             <tr>
