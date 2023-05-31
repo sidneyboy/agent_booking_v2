@@ -165,7 +165,6 @@ class Work_flow_controller extends Controller
         date_default_timezone_set('Asia/Manila');
         $date = date('Y-m-d');
 
-
         $new_sales_order_inventory_quantity = array_filter($request->input('new_sales_order_inventory_quantity'));
 
         return view('work_flow_suggested_sales_order', [
@@ -227,6 +226,8 @@ class Work_flow_controller extends Controller
         //return $request->input();
         date_default_timezone_set('Asia/Manila');
         $date = date('Y-m-d');
+        $time = date('h:i:s a');
+        $date_receipt = date('Y-m');
 
         $new_sales_order_inventory_quantity = array_filter($request->input('new_sales_order_inventory_quantity'));
 
@@ -237,15 +238,10 @@ class Work_flow_controller extends Controller
         $agent_user = Agent_user::first();
 
         if ($bad_order != "") {
-            $var_explode = explode('-', $sales_order_data->sales_order_number);
-            $year_and_month = $var_explode[3] . "-" . $var_explode[4];
-            $series = $var_explode[5];
+            $bad_order_explode = explode('-', $bad_order->pcm_number);
+            $bo_series = $bad_order_explode[5];
 
-            if ($date_receipt != $year_and_month) {
-                $sales_order_number = "SO-" .   $customer_principal_price->customer->store_name  . "-" . $agent_user->agent_id . "-" . $date_receipt  . "-0001";
-            } else {
-                $sales_order_number = "SO-" .  $customer_principal_price->customer->store_name . "-" . $agent_user->agent_id . "-" . $date_receipt . "-" . str_pad($series + 1, 4, 0, STR_PAD_LEFT);
-            }
+            $bo_pcm = "PCM-BO" .  mb_substr($customer->location->location, 0, 3) . "-" . $agent_user->area . "-" . $agent_user->agent_id . "-" . str_pad($bo_series + 1, 4, 0, STR_PAD_LEFT);
         } else {
             $bo_pcm = "PCM-BO-" .  mb_substr($customer->location->location, 0, 3) . "-" . $agent_user->area . "-" . $agent_user->agent_id . "-0001";
         }
@@ -253,18 +249,14 @@ class Work_flow_controller extends Controller
         $rgs = Return_good_stock::select('pcm_number')->orderBy('id', 'desc')->first();
 
         if ($rgs != "") {
-            $var_explode = explode('-', $sales_order_data->sales_order_number);
-            $year_and_month = $var_explode[3] . "-" . $var_explode[4];
-            $series = $var_explode[5];
+            $rgs_explode = explode('-', $rgs->pcm_number);
+            $rgs_series = $rgs_explode[5];
 
-            if ($date_receipt != $year_and_month) {
-                $sales_order_number = "SO-" .   $customer_principal_price->customer->store_name  . "-" . $agent_user->agent_id . "-" . $date_receipt  . "-0001";
-            } else {
-                $sales_order_number = "SO-" .  $customer_principal_price->customer->store_name . "-" . $agent_user->agent_id . "-" . $date_receipt . "-" . str_pad($series + 1, 4, 0, STR_PAD_LEFT);
-            }
+            $rgs_pcm =  "PCM-RGS-" .  mb_substr($customer->location->location, 0, 3) . "-" . $agent_user->area . "-" . $agent_user->agent_id . "-" . str_pad($rgs_series + 1, 4, 0, STR_PAD_LEFT);
         } else {
             $rgs_pcm = "PCM-RGS-" .  mb_substr($customer->location->location, 0, 3) . "-" . $agent_user->area . "-" . $agent_user->agent_id . "-0001";
         }
+        
 
         return view('work_flow_suggested_sales_order', [
             'inventory' => $inventory,
