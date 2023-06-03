@@ -157,159 +157,162 @@
                 </table>
             @endif
         @endif
-        <hr style="border: 5px solid black;">
-        <table style="text-align: center;">
-            <tr>
-                <th>JULMAR COMMERCIAL INC.</th>
-            </tr>
-            <tr>
-                <th>OSMENA ST., CDO</th>
-            </tr>
-            <tr>
-                <th>TEL: 857-6197, 858-5771</th>
-            </tr>
-            <tr>
-                <th>TIN: 486-701-947-000</th>
-            </tr>
-            <tr>
-                <th>REP: {{ $agent_user->agent_name }}</th>
-            </tr>
-            <tr>
-                <th>{{ $date }}</th>
-            </tr>
-            <tr>
-                <th>{{ $sales_order_number }}</th>
-            </tr>
-            <tr>
-                <th>
-                    {{ $customer_principal_price->customer->mode_of_transaction }}</th>
-            </tr>
-        </table>
-        <table>
-            <thead>
+
+        @if (array_sum($sales_order_final_quantity) != 0)
+            <hr style="border: 5px solid black;">
+            <table style="text-align: center;">
                 <tr>
-                    <th>Desc</th>
-                    <th>Qty</th>
-                    <th>U/P</th>
-                    <th>Sub Total</th>
+                    <th>JULMAR COMMERCIAL INC.</th>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach ($inventory_data as $data)
-                    @if ($sales_order_final_quantity[$data->id] != 0)
+                <tr>
+                    <th>OSMENA ST., CDO</th>
+                </tr>
+                <tr>
+                    <th>TEL: 857-6197, 858-5771</th>
+                </tr>
+                <tr>
+                    <th>TIN: 486-701-947-000</th>
+                </tr>
+                <tr>
+                    <th>REP: {{ $agent_user->agent_name }}</th>
+                </tr>
+                <tr>
+                    <th>{{ $date }}</th>
+                </tr>
+                <tr>
+                    <th>{{ $sales_order_number }}</th>
+                </tr>
+                <tr>
+                    <th>
+                        {{ $customer_principal_price->customer->mode_of_transaction }}</th>
+                </tr>
+            </table>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Desc</th>
+                        <th>Qty</th>
+                        <th>U/P</th>
+                        <th>Sub Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($inventory_data as $data)
+                        @if ($sales_order_final_quantity[$data->id] != 0)
+                            <tr>
+                                <th>
+                                    <b style="color:blue">{{ $data->sku_code }}</b><br />
+
+                                    {{ $data->description }}<br />
+                                    <b style="color:green">{{ $data->uom }}<b />
+                                </th>
+                                <th style="text-align: right">{{ $sales_order_final_quantity[$data->id] }}</th>
+                                <th style="text-align: right">
+                                    @if ($customer_principal_price->price_level == 'price_1')
+                                        @php
+                                            $unit_price = $data->price_1;
+                                        @endphp
+                                        {{ number_format($data->price_1, 2, '.', ',') }}
+                                    @elseif($customer_principal_price->price_level == 'price_2')
+                                        @php
+                                            $unit_price = $data->price_2;
+                                        @endphp
+                                        {{ number_format($data->price_2, 2, '.', ',') }}
+                                    @elseif($customer_principal_price->price_level == 'price_3')
+                                        @php
+                                            $unit_price = $data->price_3;
+                                        @endphp
+                                        {{ number_format($data->price_3, 2, '.', ',') }}
+                                    @elseif($customer_principal_price->price_level == 'price_4')
+                                        @php
+                                            $unit_price = $data->price_4;
+                                        @endphp
+                                        {{ number_format($data->price_4, 2, '.', ',') }}
+                                    @endif
+
+                                    <input type="hidden" value="{{ $unit_price }}"
+                                        name="unit_price[{{ $data->id }}]">
+                                </th>
+                                <th style="text-align: right">
+                                    @php
+                                        $sub_total = $unit_price * $sales_order_final_quantity[$data->id];
+                                        echo number_format($sub_total, 2, '.', ',');
+                                        $sum_total[] = $sub_total;
+                                    @endphp
+
+                                    <input type="hidden" value="{{ $data->id }}" name="inventory_id[]">
+                                    <input type="hidden" value="{{ $sales_order_final_quantity[$data->id] }}"
+                                        name="sales_order_quantity[{{ $data->id }}]">
+                                </th>
+                            </tr>
+                        @endif
+                    @endforeach
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="3">Total</th>
+                        <th style="text-align: right">{{ number_format(array_sum($sum_total), 2, '.', ',') }}</th>
+                    </tr>
+                    @php
+                        $total = array_sum($sum_total);
+                        $discount_holder = [];
+                        $discount_value_holder = $total;
+                    @endphp
+                    @foreach ($customer_principal_discount as $data_discount)
                         <tr>
-                            <th>
-                                <b style="color:blue">{{ $data->sku_code }}</b><br />
-
-                                {{ $data->description }}<br />
-                                <b style="color:green">{{ $data->uom }}<b />
-                            </th>
-                            <th style="text-align: right">{{ $sales_order_final_quantity[$data->id] }}</th>
-                            <th style="text-align: right">
-                                @if ($customer_principal_price->price_level == 'price_1')
-                                    @php
-                                        $unit_price = $data->price_1;
-                                    @endphp
-                                    {{ number_format($data->price_1, 2, '.', ',') }}
-                                @elseif($customer_principal_price->price_level == 'price_2')
-                                    @php
-                                        $unit_price = $data->price_2;
-                                    @endphp
-                                    {{ number_format($data->price_2, 2, '.', ',') }}
-                                @elseif($customer_principal_price->price_level == 'price_3')
-                                    @php
-                                        $unit_price = $data->price_3;
-                                    @endphp
-                                    {{ number_format($data->price_3, 2, '.', ',') }}
-                                @elseif($customer_principal_price->price_level == 'price_4')
-                                    @php
-                                        $unit_price = $data->price_4;
-                                    @endphp
-                                    {{ number_format($data->price_4, 2, '.', ',') }}
-                                @endif
-
-                                <input type="hidden" value="{{ $unit_price }}"
-                                    name="unit_price[{{ $data->id }}]">
-                            </th>
+                            <th colspan="2"></th>
+                            <th style="text-align: right">{{ $data_discount->discount_name }}</th>
                             <th style="text-align: right">
                                 @php
-                                    $sub_total = $unit_price * $sales_order_final_quantity[$data->id];
-                                    echo number_format($sub_total, 2, '.', ',');
-                                    $sum_total[] = $sub_total;
+                                    $discount_value_holder_dummy = $discount_value_holder;
+                                    $less_percentage_by = $data_discount->discount_rate / 100;
+                                    
+                                    $discount_rate_answer = $discount_value_holder * $less_percentage_by;
+                                    $discount_value_holder = $discount_value_holder - $discount_value_holder_dummy * $less_percentage_by;
+                                    $discount_holder[] = $discount_value_holder;
+                                    echo number_format($discount_value_holder, 2, '.', ',');
                                 @endphp
-
-                                <input type="hidden" value="{{ $data->id }}" name="inventory_id[]">
-                                <input type="hidden" value="{{ $sales_order_final_quantity[$data->id] }}"
-                                    name="sales_order_quantity[{{ $data->id }}]">
                             </th>
                         </tr>
-                    @endif
-                @endforeach
-            </tbody>
-            <tfoot>
-                <tr>
-                    <th colspan="3">Total</th>
-                    <th style="text-align: right">{{ number_format(array_sum($sum_total), 2, '.', ',') }}</th>
-                </tr>
-                @php
-                    $total = array_sum($sum_total);
-                    $discount_holder = [];
-                    $discount_value_holder = $total;
-                @endphp
-                @foreach ($customer_principal_discount as $data_discount)
+                    @endforeach
                     <tr>
-                        <th colspan="2"></th>
-                        <th style="text-align: right">{{ $data_discount->discount_name }}</th>
-                        <th style="text-align: right">
-                            @php
-                                $discount_value_holder_dummy = $discount_value_holder;
-                                $less_percentage_by = $data_discount->discount_rate / 100;
-                                
-                                $discount_rate_answer = $discount_value_holder * $less_percentage_by;
-                                $discount_value_holder = $discount_value_holder - $discount_value_holder_dummy * $less_percentage_by;
-                                $discount_holder[] = $discount_value_holder;
-                                echo number_format($discount_value_holder, 2, '.', ',');
-                            @endphp
+                        <th colspan="3" style="text-align: right">Final Total</th>
+                        <th style="text-align: right;text-decoration: overline">
+                            @if (array_sum($discount_holder) != 0)
+                                {{ number_format(end($discount_holder), 2, '.', ',') }}
+                                @php
+                                    $final_total = end($discount_holder);
+                                @endphp
+                            @else
+                                {{ number_format(array_sum($sum_total), 2, '.', ',') }}
+                                @php
+                                    $final_total = array_sum($sum_total);
+                                @endphp
+                            @endif
                         </th>
                     </tr>
-                @endforeach
-                <tr>
-                    <th colspan="3" style="text-align: right">Final Total</th>
-                    <th style="text-align: right;text-decoration: overline">
-                        @if (array_sum($discount_holder) != 0)
-                            {{ number_format(end($discount_holder), 2, '.', ',') }}
-                            @php
-                                $final_total = end($discount_holder);
-                            @endphp
-                        @else
-                            {{ number_format(array_sum($sum_total), 2, '.', ',') }}
-                            @php
-                                $final_total = array_sum($sum_total);
-                            @endphp
-                        @endif
-                    </th>
-                </tr>
-                <tr>
-                    <th colspan="4">
-                        <div class="wrapper">
-                            <canvas id="signature-pad" style="border:dotted;width:100%;height:150px;"
-                                class="signature-pad"></canvas>
-                        </div>
-                    </th>
-                </tr>
-            </tfoot>
-        </table>
+                    <tr>
+                        <th colspan="4">
+                            <div class="wrapper">
+                                <canvas id="signature-pad" style="border:dotted;width:100%;height:150px;"
+                                    class="signature-pad"></canvas>
+                            </div>
+                        </th>
+                    </tr>
+                </tfoot>
+            </table>
+            <input type="hidden" name="total_amount" value="{{ $final_total }}">
+        @endif
     </div>
     <input type="hidden" name="agent_id" value="{{ $agent_user->agent_id }}">
-    <input type="hidden" name="total_amount" value="{{ $final_total }}">
     <input type="hidden" name="sales_order_number" value="{{ $sales_order_number }}">
     <input type="hidden" name="principal_id" value="{{ $principal_id }}">
     <input type="hidden" name="customer_id" value="{{ $customer_id }}">
     <input type="hidden" name="sku_type" value="{{ $sku_type }}">
     <input type="hidden" name="sales_register_id" value="{{ $sales_register_id }}">
+    <input type="hidden" name="sales_order_final_quantity" value="{{ array_sum($sales_order_final_quantity) }}">
     <input type="hidden" name="mode_of_transaction"
         value="{{ $customer_principal_price->customer->mode_of_transaction }}">
-
     <button type="submit" class="btn btn-block btn-success">Submit Sales Order</button>
     <br />
 </form>

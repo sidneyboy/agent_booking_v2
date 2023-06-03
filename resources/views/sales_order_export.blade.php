@@ -100,7 +100,7 @@
                 <!-- /.card-body -->
                 <div class="card-footer">
                     <button id="trigger"
-                        onclick="exportTableToCSV('{{ $agent_user->agent_name }} Sales Order {{ $date }} {{ $time }}.csv')"
+                        onclick="exportTableToCSV('{{ preg_replace('/[^a-zA-Z0-9_ -]/s',' ',$sales_order[0]->sales_order_number)  }}.csv')"
                         class="btn btn-success btn-block btn-sm" style="display: none">Export Sales Order</button>
                 </div>
                 <!-- /.card-footer-->
@@ -214,8 +214,7 @@
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer">
-                    <button id="trigger_2"
-                        onclick="exportTableToCSV('{{ $data->sales_order_number }}.csv')"
+                    <button id="trigger_2" onclick="exportTableToCSV('{{ $data->sales_order_number }}.csv')"
                         class="btn btn-success btn-block btn-sm" style="display: none">Export Sales Order</button>
                 </div>
                 <!-- /.card-footer-->
@@ -308,7 +307,7 @@
                         $('.loading').hide();
                         // location.reload();
                         $('#trigger_2').click();
-                        window.location.href = "/work_flow";
+                        // window.location.href = "/work_flow";
                     } else {
                         Swal.fire(
                             'Something went wrong!',
@@ -343,7 +342,6 @@
                         })
 
                         $('.loading').hide();
-                        // location.reload();
                         $('#trigger').click();
                         window.location.href = "/work_flow";
                     } else {

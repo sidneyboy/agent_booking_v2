@@ -241,7 +241,7 @@ class Work_flow_controller extends Controller
             $bad_order_explode = explode('-', $bad_order->pcm_number);
             $bo_series = $bad_order_explode[5];
 
-            $bo_pcm = "PCM-BO" .  mb_substr($customer->location->location, 0, 3) . "-" . $agent_user->area . "-" . $agent_user->agent_id . "-" . str_pad($bo_series + 1, 4, 0, STR_PAD_LEFT);
+            $bo_pcm = "PCM-BO-" .  mb_substr($customer->location->location, 0, 3) . "-" . $agent_user->area . "-" . $agent_user->agent_id . "-" . str_pad($bo_series + 1, 4, 0, STR_PAD_LEFT);
         } else {
             $bo_pcm = "PCM-BO-" .  mb_substr($customer->location->location, 0, 3) . "-" . $agent_user->area . "-" . $agent_user->agent_id . "-0001";
         }
@@ -256,7 +256,7 @@ class Work_flow_controller extends Controller
         } else {
             $rgs_pcm = "PCM-RGS-" .  mb_substr($customer->location->location, 0, 3) . "-" . $agent_user->area . "-" . $agent_user->agent_id . "-0001";
         }
-        
+
 
         return view('work_flow_suggested_sales_order', [
             'inventory' => $inventory,
@@ -285,7 +285,7 @@ class Work_flow_controller extends Controller
     public function work_flow_inventory_save_as_draft(Request $request)
     {
 
-        // return $request->input();
+        //return $request->input();
         $new = new Inventory_draft([
             'customer_id' => $request->input('customer_id'),
             'principal_id' => $request->input('principal_id'),
@@ -324,7 +324,6 @@ class Work_flow_controller extends Controller
 
     public function work_flow_final_summary(Request $request)
     {
-        //return $request->input();
         date_default_timezone_set('Asia/Manila');
         $date = date('Y-m-d');
         $time = date('h:i:s a');
@@ -385,9 +384,6 @@ class Work_flow_controller extends Controller
             'current_bo_inventory_unit_price' => $request->input('current_bo_inventory_unit_price'),
             'current_bo' => $request->input('current_bo'),
             'current_bo_inventory_id' => $request->input('current_bo_inventory_id'),
-
-
-
             'current_rgs_inventory_description' => $request->input('current_rgs_inventory_description'),
             'current_rgs_inventory_sku_code' => $request->input('current_rgs_inventory_sku_code'),
             'current_rgs_inventory_unit_price' => $request->input('current_rgs_inventory_unit_price'),
@@ -534,34 +530,36 @@ class Work_flow_controller extends Controller
             }
         }
 
-        $sales_order_save = new Sales_order([
-            'customer_id' => $request->input('customer_id'),
-            'principal_id' => $request->input('principal_id'),
-            'mode_of_transaction' => $request->input('mode_of_transaction'),
-            'sku_type' => strtoupper($request->input('sku_type')),
-            'total_amount' => $request->input('total_amount'),
-            'agent_id' => $request->input('agent_id'),
-            'status' => 'New',
-            'exported' => 'not_yet_exported',
-            'amount_paid' => 0,
-            'sales_order_number' => $request->input('sales_order_number'),
-        ]);
-
-        $sales_order_save->save();
-
-        foreach ($request->input('inventory_id') as $key => $data) {
-            $sales_order_details_save = new Sales_order_details([
-                'sales_order_id' => $sales_order_save->id,
-                'inventory_id' => $data,
-                'quantity' => $request->input('sales_order_quantity')[$data],
-                'unit_price' => $request->input('unit_price')[$data],
+        if ($request->input('sales_order_final_quantity') != 0) {
+            $sales_order_save = new Sales_order([
+                'customer_id' => $request->input('customer_id'),
+                'principal_id' => $request->input('principal_id'),
+                'mode_of_transaction' => $request->input('mode_of_transaction'),
                 'sku_type' => strtoupper($request->input('sku_type')),
+                'total_amount' => $request->input('total_amount'),
+                'agent_id' => $request->input('agent_id'),
+                'status' => 'New',
+                'exported' => 'not_yet_exported',
+                'amount_paid' => 0,
+                'sales_order_number' => $request->input('sales_order_number'),
             ]);
 
-            $sales_order_details_save->save();
-        }
+            $sales_order_save->save();
 
-        return 'saved';
+            foreach ($request->input('inventory_id') as $key => $data) {
+                $sales_order_details_save = new Sales_order_details([
+                    'sales_order_id' => $sales_order_save->id,
+                    'inventory_id' => $data,
+                    'quantity' => $request->input('sales_order_quantity')[$data],
+                    'unit_price' => $request->input('unit_price')[$data],
+                    'sku_type' => strtoupper($request->input('sku_type')),
+                ]);
+
+                $sales_order_details_save->save();
+            }
+
+            return 'saved';
+        }
     }
 
     public function work_flow_no_inventory_proceed_to_very_final_summary(Request $request)
