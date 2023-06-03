@@ -8,6 +8,7 @@
                 <th></th>
                 <th></th>
                 <th>{{ $details[0]->pcm->pcm_number }}</th>
+                <th></th>
             </tr>
             <tr>
                 <th>{{ $agent_user->agent_name }}</th>
@@ -16,8 +17,10 @@
                 <th>{{ $details[0]->pcm->agent_id }}</th>
                 <th>{{ $details[0]->inventory->sku_type }}</th>
                 <th>{{ $details[0]->pcm->created_at }}</th>
+                <th></th>
             </tr>
             <tr>
+                <th>ID</th>
                 <th>Code</th>
                 <th>Description</th>
                 <th>Sku Type</th>
@@ -29,6 +32,7 @@
         <tbody>
             @foreach ($details as $data)
                 <tr>
+                    <td>{{ $data->inventory->id }}</td>
                     <td>{{ $data->inventory->sku_code }}</td>
                     <td>{{ $data->inventory->description }}</td>
                     <td>{{ $data->inventory->sku_type }}</td>
@@ -47,6 +51,7 @@
         <tfoot>
             <tr>
                 <th>Total</th>
+                <th></th>
                 <th></th>
                 <th></th>
                 <th></th>
