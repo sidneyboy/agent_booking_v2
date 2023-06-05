@@ -25,8 +25,8 @@
                 <th>Description</th>
                 <th>Sku Type</th>
                 <th>Quantity</th>
-                <th>U/P</th>
-                <th>Total</th>
+                {{-- <th>U/P</th>
+                <th>Total</th> --}}
             </tr>
         </thead>
         <tbody>
@@ -37,18 +37,18 @@
                     <td>{{ $data->inventory->description }}</td>
                     <td>{{ $data->inventory->sku_type }}</td>
                     <td style="text-align: right">{{ $data->quantity }}</td>
-                    <td style="text-align: right">{{ $data->unit_price }}</td>
+                    <td style="text-align: right"></td>
                     <td style="text-align: right">
-                        @php
+                        {{-- @php
                             $total = $data->quantity * $data->unit_price;
                             $sum_total[] = $total;
                             echo $total;
-                        @endphp
+                        @endphp --}}
                     </td>
                 </tr>
             @endforeach
         </tbody>
-        <tfoot>
+        {{-- <tfoot>
             <tr>
                 <th>Total</th>
                 <th></th>
@@ -56,9 +56,9 @@
                 <th></th>
                 <th></th>
                 <th></th>
-                <th style="text-align: right">{{ array_sum($sum_total) }}</th>
+                <th style="text-align: right"></th>
             </tr>
-        </tfoot>
+        </tfoot> --}}
     </table>
 </div>
 

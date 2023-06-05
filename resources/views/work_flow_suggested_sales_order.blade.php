@@ -22,8 +22,8 @@
                     <tr>
                         <th>Desc</th>
                         <th>RGS</th>
-                        <th>U/P</th>
-                        <th>Total</th>
+                        {{-- <th>U/P</th>
+                        <th>Total</th> --}}
                     </tr>
                 </thead>
                 <tbody>
@@ -35,13 +35,10 @@
                                     {{ $current_inventory_description[$rgs_data] }} <br />
                                     <b style="color:green">{{ $sku_type }}</b>
                                 </td>
-                                <td style="text-align: right">{{ $current_rgs[$rgs_data] }}</td>
-                                <td style="text-align: right">
-                                    {{ number_format($current_inventory_unit_price[$rgs_data], 2, '.', ',') }}</td>
-                                <td style="text-align: right">
+                                <td style="text-align: right">{{ $current_rgs[$rgs_data] }}
                                     @php
                                         $rgs_sub_total = $current_inventory_unit_price[$rgs_data] * $current_rgs[$rgs_data];
-                                        echo number_format($rgs_sub_total, 2, '.', ',');
+                                        
                                         $rgs_total[] = $rgs_sub_total;
                                     @endphp
                                     <input type="hidden" value="{{ $rgs_data }}" name="current_rgs_inventory_id[]">
@@ -54,6 +51,11 @@
                                     <input type="hidden" value="{{ $current_inventory_unit_price[$rgs_data] }}"
                                         name="current_rgs_inventory_unit_price[{{ $rgs_data }}]">
                                 </td>
+                                {{-- <td style="text-align: right">
+                                    {{ number_format($current_inventory_unit_price[$rgs_data], 2, '.', ',') }}</td>
+                                <td style="text-align: right">
+
+                                </td> --}}
                             </tr>
                         @endif
                     @endforeach
@@ -92,10 +94,7 @@
                                     {{ $current_inventory_description[$bo_data] }} <br />
                                     <b style="color:green">{{ $sku_type }}</b>
                                 </td>
-                                <td style="text-align: right">{{ $current_bo[$bo_data] }}</td>
-                                <td style="text-align: right">
-                                    {{ number_format($current_inventory_unit_price[$bo_data], 2, '.', ',') }}</td>
-                                <td style="text-align: right">
+                                <td style="text-align: right">{{ $current_bo[$bo_data] }}
                                     @php
                                         $bo_sub_total = $current_inventory_unit_price[$bo_data] * $current_bo[$bo_data];
                                         echo number_format($bo_sub_total, 2, '.', ',');
@@ -111,6 +110,11 @@
                                     <input type="hidden" value="{{ $current_inventory_unit_price[$bo_data] }}"
                                         name="current_bo_inventory_unit_price[{{ $bo_data }}]">
                                 </td>
+                                {{-- <td style="text-align: right">
+                                    {{ number_format($current_inventory_unit_price[$bo_data], 2, '.', ',') }}</td>
+                                <td style="text-align: right">
+
+                                </td> --}}
                             </tr>
                         @endif
                     @endforeach

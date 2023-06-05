@@ -93,7 +93,6 @@
                             )
                             window.location.href = "/work_flow";
                         }
-                        // console.log(data);
                     },
                 });
             } else if (result.isDenied) {

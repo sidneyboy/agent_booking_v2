@@ -123,6 +123,14 @@
                 $('.loading').hide();
                 $('#work_flow_suggested_sales_order_page').html(data);
             },
+            error: function(error) {
+                $('.loading').hide();
+                Swal.fire(
+                    'Cannot Proceed',
+                    'Please Contact IT Support',
+                    'error'
+                )
+            }
         });
     }));
 </script>
