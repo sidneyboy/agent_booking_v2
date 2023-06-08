@@ -12,6 +12,7 @@ use App\Models\Customer_principal_discount;
 use App\Models\Customer_export;
 use App\Models\Customer_export_details;
 use App\Models\Principal;
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Schema;
 
@@ -27,6 +28,12 @@ class Customer_controller extends Controller
 
     public function customer_upload_process(Request $request)
     {
+
+        Schema::disableForeignKeyConstraints();
+        DB::table('customers')->truncate();
+        DB::table('customer_principal_prices')->truncate();
+        Schema::enableForeignKeyConstraints();
+
         date_default_timezone_set('Asia/Manila');
         $date = date('Y-m-d');
 
