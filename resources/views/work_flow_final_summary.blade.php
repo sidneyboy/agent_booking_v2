@@ -35,10 +35,10 @@
                 <table class="table table-bordered table-sm table-striped table_suggested_so">
                     <thead>
                         <tr>
-                            <th colspan="4" style="color:blue">THIS WILL SERVE AS UNOFFICIAL BO PCM</th>
+                            <th colspan="2" style="color:blue">THIS WILL SERVE AS UNOFFICIAL BO PCM</th>
                         </tr>
                         <tr>
-                            <th colspan="4">
+                            <th colspan="2">
                                 {{ $bo_pcm }}
                                 <input type="hidden" value="{{ $bo_pcm }}" name="bo_pcm">
                             </th>
@@ -84,7 +84,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th colspan="3" style="text-align: center">Total</th>
+                            <th style="text-align: center">Total</th>
                             <th style="text-align: right">
                                 {{ number_format(array_sum($bo_total), 2, '.', ',') }}
                                 <input type="hidden" value="{{ array_sum($bo_total) }}" name="total_bo_amount">
@@ -103,19 +103,17 @@
                 <table class="table table-bordered table-sm table-striped table_suggested_so">
                     <thead>
                         <tr>
-                            <th colspan="4" style="color:blue">THIS WILL SERVE AS UNOFFICIAL RGS PCM</th>
+                            <th colspan="2" style="color:blue">THIS WILL SERVE AS UNOFFICIAL RGS PCM</th>
                         </tr>
                         <tr>
-                            <th colspan="4">
+                            <th colspan="2">
                                 {{ $rgs_pcm }}
                                 <input type="hidden" value="{{ $rgs_pcm }}" name="rgs_pcm">
                             </th>
                         </tr>
                         <tr>
                             <th>Desc</th>
-                            <th>BO</th>
-                            <th>U/P</th>
-                            <th>Sub Total</th>
+                            <th>RGS</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -153,7 +151,7 @@
                     </tbody>
                     <tfoot>
                         <tr>
-                            <th colspan="3" style="text-align: center">Total</th>
+                            <th style="text-align: center">Total</th>
                             <th style="text-align: right">
                                 {{ number_format(array_sum($rgs_total), 2, '.', ',') }}
                                 <input type="hidden" value="{{ array_sum($rgs_total) }}" name="total_rgs_amount">

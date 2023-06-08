@@ -62,7 +62,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="3" style="text-align: center">Total</th>
+                        <th style="text-align: center">Total</th>
                         <th style="text-align: right">{{ number_format(array_sum($rgs_total), 2, '.', ',') }}</th>
                     </tr>
                 </tfoot>
@@ -81,8 +81,8 @@
                     <tr>
                         <th>Desc</th>
                         <th>BO</th>
-                        <th>U/P</th>
-                        <th>Sub Total</th>
+                        {{-- <th>U/P</th>
+                        <th>Sub Total</th> --}}
                     </tr>
                 </thead>
                 <tbody>
@@ -121,7 +121,7 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="3" style="text-align: center">Total</th>
+                        <th  style="text-align: center">Total</th>
                         <th style="text-align: right">{{ number_format(array_sum($bo_total), 2, '.', ',') }}</th>
                     </tr>
                 </tfoot>
