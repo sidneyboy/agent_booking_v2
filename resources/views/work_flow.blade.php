@@ -27,14 +27,14 @@
                 </div>
             </div>
             <div class="card-body">
-                @if ($sales_order_check == 0 AND $sales_order_new_customer_check == 0)
+                @if ($sales_order_check == 0 and $sales_order_new_customer_check == 0)
                     <form id="work_flow_show_inventory">
                         <div class="form-group">
                             <label>Customer</label>
                             <select name="customer" id="customer" class="form-control form-control-sm select2" required
                                 style="width:100%;">
                                 <option value="" default>SELECT</option>
-                                {{-- <option value="NEW CUSTOMER">NEW CUSTOMER</option> --}}
+                                <option value="NEW CUSTOMER">NEW CUSTOMER</option>
                                 @foreach ($customer as $data)
                                     <option value="{{ $data->id }}">{{ $data->store_name }}</option>
                                 @endforeach
@@ -59,10 +59,9 @@
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-info btn-block" id="proceed"
-                                style="display: none">PROCEED</button>
+                                style="display: none">Proceed</button>
                         </div>
                     </form>
-                
                 @else
                     <p style="color:blue;text-align:center;">
                         CANNOT TRANSACT PLEASE EXPORT THE PREVIOUS SO AND SEND TO ENCODER THANK YOU.</p>
@@ -154,7 +153,13 @@
                                 'Please Pay Past Sales Order First!',
                                 'error'
                             );
-
+                            $('#proceed').hide();
+                        } else if (data == 'update_principal_price') {
+                            Swal.fire(
+                                'Customer Principal Price Lacking',
+                                'Update Customer First!',
+                                'error'
+                            );
                             $('#proceed').hide();
                         } else {
                             $('#proceed').show();
@@ -169,7 +174,7 @@
 
         $("#work_flow_show_inventory").on('submit', (function(e) {
             e.preventDefault();
-            //$('.loading').show();
+            $('.loading').show();
             $.ajax({
                 url: "work_flow_show_inventory",
                 type: "POST",
@@ -178,8 +183,17 @@
                 cache: false,
                 processData: false,
                 success: function(data) {
-                    $('.loading').hide();
-                    $('#work_flow_show_inventory_page').html(data);
+                    if (data == 'principal_price_lacking') {
+                        Swal.fire(
+                            'Customer Principal Price Lacking',
+                            'Update Customer First!',
+                            'error'
+                        );
+                        $('.loading').hide();
+                    } else {
+                        $('.loading').hide();
+                        $('#work_flow_show_inventory_page').html(data);
+                    }
                 },
             });
         }));

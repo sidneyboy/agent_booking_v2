@@ -44,7 +44,7 @@
             @endforeach
         </select>
 
-        <label>Detailed Addres</label>
+        <label>Detailed Address</label>
         <input type="text" class="form-control" name="detailed_address" required>
 
         <label>Longitude</label>
@@ -85,7 +85,7 @@
 
     <input type="hidden" value="{{ $principal_id }}" name="principal_id">
     <input type="hidden" value="{{ $sku_type }}" name="sku_type">
-    <button class="btn btn-block btn-info" type="submit">PROCEED</button>
+    <button class="btn btn-block btn-info" type="submit">Proceed</button>
 </form>
 
 <script>
@@ -109,7 +109,7 @@
 
     $("#work_flow_new_customer_final_summary").on('submit', (function(e) {
         e.preventDefault();
-        //$('.loading').show();
+        $('.loading').show();
         $.ajax({
             url: "work_flow_new_customer_final_summary",
             type: "POST",
@@ -121,6 +121,14 @@
                 $('.loading').hide();
                 $('#work_flow_final_summary_page').html(data);
             },
+            error: function(error) {
+                $('.loading').hide();
+                Swal.fire(
+                    'Cannot Proceed',
+                    'Please Contact IT Support',
+                    'error'
+                )
+            }
         });
     }));
 </script>

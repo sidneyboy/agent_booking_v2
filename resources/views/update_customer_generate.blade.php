@@ -79,7 +79,7 @@
                 {{ $customer->location->location }}</option>
         </select>
 
-        <label>Detailed Addres</label>
+        <label>Detailed Address</label>
         <input type="text" class="form-control" name="detailed_address" value="{{ $customer->detailed_address }}"
             required>
 

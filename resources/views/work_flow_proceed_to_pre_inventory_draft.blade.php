@@ -111,7 +111,7 @@
     $('.select2').select2();
     $("#work_flow_proceed_to_pre_inventory_draft_suggested_sales_order").on('submit', (function(e) {
         e.preventDefault();
-        //$('.loading').show();
+        $('.loading').show();
         $.ajax({
             url: "work_flow_suggested_sales_order",
             type: "POST",

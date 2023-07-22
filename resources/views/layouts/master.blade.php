@@ -323,7 +323,7 @@
                         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                             data-accordion="false">
                             <!-- Add icons to the links using the .nav-icon class
-                                                                          with font-awesome or any other icon font library -->
+                                                                              with font-awesome or any other icon font library -->
 
                             <li class="nav-item">
                                 <a href="#" class="nav-link">
@@ -499,7 +499,25 @@
                                     </p>
                                 </a>
                             </li>
+                            {{-- <li class="nav-item">
+                                <a href="{{ url('collection') }}"
+                                    class="nav-link {{ $active == 'collection' ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-solid fa-arrow-right"></i>
+                                    <p>
+                                        Collection
+                                    </p>
+                                </a>
+                            </li>
 
+                            <li class="nav-item">
+                                <a href="{{ url('collection_export') }}"
+                                    class="nav-link {{ $active == 'collection_export' ? 'active' : '' }}">
+                                    <i class="nav-icon fas fa-solid fa-arrow-right"></i>
+                                    <p>
+                                        Collection Export
+                                    </p>
+                                </a>
+                            </li> --}}
                             <li class="nav-item">
                                 <a href="{{ url('sign_out') }}"
                                     class="nav-link {{ $active == 'sign_out' ? 'active' : '' }}">
@@ -510,25 +528,7 @@
                                 </a>
                             </li>
 
-                            {{-- <li class="nav-item">
-                                <a href="{{ url('collection') }}"
-                                    class="nav-link {{ $active == 'collection' ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-th"></i>
-                                    <p>
-                                        Collection
-                                    </p>
-                                </a>
-                            </li>
 
-                            <li class="nav-item">
-                                <a href="{{ url('collection_export') }}"
-                                    class="nav-link {{ $active == 'collection_export' ? 'active' : '' }}">
-                                    <i class="nav-icon fas fa-th"></i>
-                                    <p>
-                                        Collection Export
-                                    </p>
-                                </a>
-                            </li> --}}
 
 
 

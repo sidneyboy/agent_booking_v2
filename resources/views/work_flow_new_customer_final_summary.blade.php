@@ -48,7 +48,8 @@
                             @endphp
                             <input type="hidden" name="inventory_id[]" value="{{ $data->id }}">
                             <input type="hidden" name="unit_price[{{ $data->id }}]" value="{{ $unit_price }}">
-                            <input type="hidden" name="quantity[{{ $data->id }}]" value="{{ $new_sales_order[$data->id] }}">
+                            <input type="hidden" name="quantity[{{ $data->id }}]"
+                                value="{{ $new_sales_order[$data->id] }}">
                         </td>
                     </tr>
                 @endforeach
@@ -84,7 +85,7 @@
 <script>
     $("#work_flow_new_customer_saved").on('submit', (function(e) {
         e.preventDefault();
-        //$('.loading').show();
+        $('.loading').show();
         $.ajax({
             url: "work_flow_new_customer_saved",
             type: "POST",
@@ -94,20 +95,23 @@
             processData: false,
             success: function(data) {
                 $('.loading').hide();
-                if (data == "saved") {
-                    Swal.fire({
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Your work has been saved',
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                    window.location.href = "/collection";
-                } else {
-                    alert('asdasd');
-                }
-
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Your work has been saved',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                window.location.href = "/sales_order_export";
             },
+            error: function(error) {
+                $('.loading').hide();
+                Swal.fire(
+                    'Cannot Proceed',
+                    'Please Contact IT Support',
+                    'error'
+                )
+            }
         });
     }));
 </script>

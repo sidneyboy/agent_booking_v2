@@ -209,7 +209,7 @@
                                 </table>
                             @endforeach
                         </div>
-                        <button type="submit" class="btn btn-success btn-block">EXPORT SALES ORDER</button>
+                        <button type="submit" class="btn btn-success btn-block">Export</button>
                     </form>
                 </div>
                 <!-- /.card-body -->
@@ -307,7 +307,7 @@
                         $('.loading').hide();
                         // location.reload();
                         $('#trigger_2').click();
-                        // window.location.href = "/work_flow";
+                        window.location.href = "/work_flow";
                     } else {
                         Swal.fire(
                             'Something went wrong!',

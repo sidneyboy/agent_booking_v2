@@ -66,8 +66,7 @@
 <script>
     $("#work_flow_suggested_sales_order").on('submit', (function(e) {
         e.preventDefault();
-        //$('.loading').show();
-
+        $('.loading').show();
         Swal.fire({
             title: 'Save as draft ?',
             showDenyButton: true,
@@ -84,13 +83,15 @@
                     cache: false,
                     processData: false,
                     success: function(data) {
-                        $('.loading').hide();
+                        
                         if (data == 'saved') {
+                            $('.loading').hide();
                             Swal.fire(
                                 'Work saved to Draft',
                                 '',
                                 'success'
                             )
+                            
                             window.location.href = "/work_flow";
                         }
                     },
