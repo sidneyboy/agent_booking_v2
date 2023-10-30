@@ -189,16 +189,16 @@ class Work_flow_controller extends Controller
         $inventory = Inventory::whereIn('id', array_keys($new_sales_order_inventory_quantity))->get();
 
         $bad_order = Bad_order::select('pcm_number')->orderBy('id', 'desc')->first();
-        $customer = Customer::select('location_id')->find($request->input('customer_id'));
+        $customer = Customer::select('store_name','location_id')->find($request->input('customer_id'));
         $agent_user = Agent_user::first();
 
         if ($bad_order != "") {
             $bad_order_explode = explode('-', $bad_order->pcm_number);
             $bo_series = $bad_order_explode[5];
 
-            $bo_pcm = "PCM-BO-" .  mb_substr($customer->location->location, 0, 3) . "-" . $agent_user->area . "-" . $agent_user->agent_id . "-" . str_pad($bo_series + 1, 4, 0, STR_PAD_LEFT);
+            $bo_pcm = "PCM-BO-" .  mb_substr($customer->location->location, 0, 3) . "-" . $customer->store_name . "-" . $agent_user->agent_id . "-" . str_pad($bo_series + 1, 4, 0, STR_PAD_LEFT);
         } else {
-            $bo_pcm = "PCM-BO-" .  mb_substr($customer->location->location, 0, 3) . "-" . $agent_user->area . "-" . $agent_user->agent_id . "-0001";
+            $bo_pcm = "PCM-BO-" .  mb_substr($customer->location->location, 0, 3) . "-" . $customer->store_name . "-" . $agent_user->agent_id . "-0001";
         }
 
         $rgs = Return_good_stock::select('pcm_number')->orderBy('id', 'desc')->first();
@@ -207,10 +207,13 @@ class Work_flow_controller extends Controller
             $rgs_explode = explode('-', $rgs->pcm_number);
             $rgs_series = $rgs_explode[5];
 
-            $rgs_pcm =  "PCM-RGS-" .  mb_substr($customer->location->location, 0, 3) . "-" . $agent_user->area . "-" . $agent_user->agent_id . "-" . str_pad($rgs_series + 1, 4, 0, STR_PAD_LEFT);
+            $rgs_pcm =  "PCM-RGS-" .  mb_substr($customer->location->location, 0, 3) . "-" . $customer->store_name . "-" . $agent_user->agent_id . "-" . str_pad($rgs_series + 1, 4, 0, STR_PAD_LEFT);
         } else {
-            $rgs_pcm = "PCM-RGS-" .  mb_substr($customer->location->location, 0, 3) . "-" . $agent_user->area . "-" . $agent_user->agent_id . "-0001";
+            $rgs_pcm = "PCM-RGS-" .  mb_substr($customer->location->location, 0, 3) . "-" . $customer->store_name . "-" . $agent_user->agent_id . "-0001";
         }
+
+
+
 
 
         return view('work_flow_suggested_sales_order', [
@@ -279,7 +282,7 @@ class Work_flow_controller extends Controller
 
     public function work_flow_final_summary(Request $request)
     {
-        //return $request->input();
+
         date_default_timezone_set('Asia/Manila');
         $date = date('Y-m-d');
         $time = date('h:i:s a');
@@ -311,7 +314,7 @@ class Work_flow_controller extends Controller
                 $sales_order_number = "SO-" .  $customer_principal_price->customer->store_name . "-" . $agent_user->agent_id . "-" . $date_receipt  . "-0001";
             }
 
-            $inventory_data = Inventory::select(
+            return $inventory_data = Inventory::select(
                 'sku_type',
                 'description',
                 'sku_code',

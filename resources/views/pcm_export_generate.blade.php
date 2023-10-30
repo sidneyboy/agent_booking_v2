@@ -1,54 +1,125 @@
-<div class="table table-responsive">
-    <table class="table table-bordered table-hover table-sm table-striped" style="width:100%;" id="export_table">
-        <thead>
-            <tr>
-                <th>{{ $details[0]->pcm->customer->store_name }}</th>
-                <th>{{ $details[0]->pcm->customer_id }}</th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th>{{ $details[0]->pcm->pcm_number }}</th>
-                <th></th>
-            </tr>
-            <tr>
-                <th>{{ $agent_user->agent_name }}</th>
-                <th>{{ $details[0]->pcm->principal->principal }}</th>
-                <th>{{ $details[0]->pcm->principal_id }}</th>
-                <th>{{ $details[0]->pcm->agent_id }}</th>
-                <th>{{ $details[0]->inventory->sku_type }}</th>
-                <th>{{ $details[0]->pcm->created_at }}</th>
-                <th></th>
-            </tr>
-            <tr>
-                <th>ID</th>
-                <th>Code</th>
-                <th>Description</th>
-                <th>Sku Type</th>
-                <th>Quantity</th>
-                {{-- <th>U/P</th>
-                <th>Total</th> --}}
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($details as $data)
+<form action="{{ route('pcm_export_change_status') }}" method="post">
+    @csrf
+    @if ($transaction == 'bo')
+        <input type="hidden" value="{{ $details[0]->pcm->id }}" name="id">
+        <div class="table table-responsive">
+            <table class="table table-bordered table-hover table-sm table-striped" style="width:100%;" id="export_table">
+                <thead>
+                    <tr>
+                        <th>{{ $details[0]->pcm->customer->store_name }}</th>
+                        <th>{{ $details[0]->pcm->customer_id }}</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>{{ $details[0]->pcm->pcm_number }}</th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <th>{{ $agent_user->agent_name }}</th>
+                        <th>{{ $details[0]->pcm->principal->principal }}</th>
+                        <th>{{ $details[0]->pcm->principal_id }}</th>
+                        <th>{{ $details[0]->pcm->agent_id }}</th>
+                        <th>{{ $details[0]->inventory->sku_type }}</th>
+                        <th>{{ $details[0]->pcm->created_at }}</th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <th>ID</th>
+                        <th>Code</th>
+                        <th>Description</th>
+                        <th>Sku Type</th>
+                        <th>Quantity</th>
+                        {{-- <th>U/P</th>
+                    <th>Total</th> --}}
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($details as $data)
+                        <tr>
+                            <td>{{ $data->inventory->id }}</td>
+                            <td>{{ $data->inventory->sku_code }}</td>
+                            <td>{{ $data->inventory->description }}</td>
+                            <td>{{ $data->inventory->sku_type }}</td>
+                            <td style="text-align: right">{{ $data->quantity }}</td>
+                            <td style="text-align: right"></td>
+                            <td style="text-align: right">
+                                {{-- @php
+                                $total = $data->quantity * $data->unit_price;
+                                $sum_total[] = $total;
+                                echo $total;
+                            @endphp --}}
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+                {{-- <tfoot>
                 <tr>
-                    <td>{{ $data->inventory->id }}</td>
-                    <td>{{ $data->inventory->sku_code }}</td>
-                    <td>{{ $data->inventory->description }}</td>
-                    <td>{{ $data->inventory->sku_type }}</td>
-                    <td style="text-align: right">{{ $data->quantity }}</td>
-                    <td style="text-align: right"></td>
-                    <td style="text-align: right">
-                        {{-- @php
+                    <th>Total</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th style="text-align: right"></th>
+                </tr>
+            </tfoot> --}}
+            </table>
+        </div>
+    @else
+        <input type="hidden" value="{{ $details[0]->pcm->id }}" name="id">
+        <div class="table table-responsive">
+            <table class="table table-bordered table-hover table-sm table-striped" style="width:100%;"
+                id="export_table">
+                <thead>
+                    <tr>
+                        <th>{{ $details[0]->pcm->customer->store_name }}</th>
+                        <th>{{ $details[0]->pcm->customer_id }}</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th>{{ $details[0]->pcm->pcm_number }}</th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <th>{{ $agent_user->agent_name }}</th>
+                        <th>{{ $details[0]->pcm->principal->principal }}</th>
+                        <th>{{ $details[0]->pcm->principal_id }}</th>
+                        <th>{{ $details[0]->pcm->agent_id }}</th>
+                        <th>{{ $details[0]->inventory->sku_type }}</th>
+                        <th>{{ $details[0]->pcm->created_at }}</th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <th>ID</th>
+                        <th>Code</th>
+                        <th>Description</th>
+                        <th>Sku Type</th>
+                        <th>Quantity</th>
+                        {{-- <th>U/P</th>
+                            <th>Total</th> --}}
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($details as $data)
+                        <tr>
+                            <td>{{ $data->inventory->id }}</td>
+                            <td>{{ $data->inventory->sku_code }}</td>
+                            <td>{{ $data->inventory->description }}</td>
+                            <td>{{ $data->inventory->sku_type }}</td>
+                            <td style="text-align: right">{{ $data->quantity }}</td>
+                            <td style="text-align: right"></td>
+                            <td style="text-align: right">
+                                {{-- @php
                             $total = $data->quantity * $data->unit_price;
                             $sum_total[] = $total;
                             echo $total;
                         @endphp --}}
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-        {{-- <tfoot>
+
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+                {{-- <tfoot>
             <tr>
                 <th>Total</th>
                 <th></th>
@@ -59,12 +130,15 @@
                 <th style="text-align: right"></th>
             </tr>
         </tfoot> --}}
-    </table>
-</div>
-
-<br />
-<button onclick="exportTableToCSV('{{ $store_name }} PCM{{ strtoupper($transaction) }} {{ $date }} {{ $time }}.csv')"
-    class="btn btn-success btn-block">Export</button>
+            </table>
+        </div>
+    @endif
+        <input type="hidden" name="transaction" value="{{ $transaction }}">
+    <br />
+    <button
+        onclick="exportTableToCSV('{{ $filename }}.csv')"
+        class="btn btn-success btn-block" type="submit">Export</button>
+</form>
 
 <script>
     function downloadCSV(csv, filename) {

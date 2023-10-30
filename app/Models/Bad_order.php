@@ -16,6 +16,7 @@ class Bad_order extends Model
         'customer_id',
         'principal_id',
         'sales_register_id',
+        'status',
     ];
 
     public function customer()

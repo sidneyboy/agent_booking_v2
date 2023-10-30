@@ -66,7 +66,7 @@
 <script>
     $("#work_flow_suggested_sales_order").on('submit', (function(e) {
         e.preventDefault();
-        $('.loading').show();
+        //$('.loading').show();
         Swal.fire({
             title: 'Save as draft ?',
             showDenyButton: true,
@@ -97,6 +97,7 @@
                     },
                 });
             } else if (result.isDenied) {
+                $('.loading').hide();
                 Swal.fire('Changes are not saved', '', 'info')
             }
         })

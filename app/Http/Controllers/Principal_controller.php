@@ -34,6 +34,8 @@ class Principal_controller extends Controller
             }
          }
 
+         //return $csv;
+
          $counter = count($csv);
 
          Schema::disableForeignKeyConstraints();

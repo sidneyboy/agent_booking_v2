@@ -37,7 +37,7 @@
                                 </td>
                                 <td style="text-align: right">{{ $current_rgs[$rgs_data] }}
                                     @php
-                                        $rgs_sub_total = $current_inventory_unit_price[$rgs_data] * $current_rgs[$rgs_data];
+                                        $rgs_sub_total = $current_rgs[$rgs_data];
                                         
                                         $rgs_total[] = $rgs_sub_total;
                                     @endphp
@@ -63,7 +63,7 @@
                 <tfoot>
                     <tr>
                         <th style="text-align: center">Total</th>
-                        <th style="text-align: right">{{ number_format(array_sum($rgs_total), 2, '.', ',') }}</th>
+                        <th style="text-align: right">{{ array_sum($rgs_total) }}</th>
                     </tr>
                 </tfoot>
             </table>
@@ -96,8 +96,7 @@
                                 </td>
                                 <td style="text-align: right">{{ $current_bo[$bo_data] }}
                                     @php
-                                        $bo_sub_total = $current_inventory_unit_price[$bo_data] * $current_bo[$bo_data];
-                                        echo number_format($bo_sub_total, 2, '.', ',');
+                                        $bo_sub_total =  $current_bo[$bo_data];
                                         $bo_total[] = $bo_sub_total;
                                     @endphp
                                     <input type="hidden" value="{{ $bo_data }}" name="current_bo_inventory_id[]">
@@ -122,7 +121,7 @@
                 <tfoot>
                     <tr>
                         <th  style="text-align: center">Total</th>
-                        <th style="text-align: right">{{ number_format(array_sum($bo_total), 2, '.', ',') }}</th>
+                        <th style="text-align: right">{{ array_sum($bo_total) }}</th>
                     </tr>
                 </tfoot>
             </table>

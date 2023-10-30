@@ -15,6 +15,7 @@ class Return_good_stock extends Model
         'agent_id',
         'customer_id',
         'principal_id',
+        'status',
     ];
 
     public function customer()

@@ -81,7 +81,7 @@
                              showConfirmButton: false,
                              timer: 1500
                          })
-                         window.location.href = "/work_flow";
+                         window.location.href = "/inventory_upload";
                      } else if (data == 'incorrect_file') {
                          Swal.fire(
                              'INCORRECT FILE',

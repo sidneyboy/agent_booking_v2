@@ -34,7 +34,7 @@ class Inventory_controller extends Controller
         //return $csv;
         $counter = count($csv);
         if ($csv[$csv[0][0] == 'BOOKING INVENTORY']) {
-            for ($i = 2; $i < $counter; $i++) {
+            for ($i = 1; $i < $counter; $i++) {
                 $sku = Inventory::find($csv[$i][0]);
                 if ($sku) {
                     Inventory::where('id', $csv[$i][0])

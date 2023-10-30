@@ -15,8 +15,8 @@ class Pcm_export_controller extends Controller
     public function index()
     {
         $agent_user = Agent_user::first();
-        $bad_order = Bad_order::orderBy('id', 'desc')->get();
-        $rgs = Return_good_stock::orderBy('id', 'desc')->get();
+        $bad_order = Bad_order::where('status', null)->orderBy('id', 'desc')->get();
+        $rgs = Return_good_stock::where('status', null)->orderBy('id', 'desc')->get();
         return view('pcm_export', [
             'bad_order' => $bad_order,
             'rgs' => $rgs,
@@ -42,15 +42,29 @@ class Pcm_export_controller extends Controller
             $details = Return_good_stock_details::where('rgs_id', $id)->get();
         }
 
-        $store_name = str_replace("'","",$details[0]->pcm->customer->store_name);
-
+        $store_name = str_replace("'", "", $details[0]->pcm->customer->store_name);
+        $filename = str_replace(array('\'', '"', ',', ';', '<', '>'), ' ',  $details[0]->pcm->pcm_number);
         return view('pcm_export_generate', [
             'details' => $details,
             'transaction' => $transaction,
             'id' => $id,
             'store_name' => $store_name,
             'agent_user' => $agent_user,
+            'filename' => $filename,
         ])->with('date', $date)
             ->with('time', $time);
+    }
+
+    public function pcm_export_change_status(Request $request)
+    {
+        if ($request->input('transaction') == 'bo') {
+            Bad_order::where('id', $request->input('id'))
+                ->update(['status' => 'exported']);
+        } elseif ($request->input('transaction') == 'rgs') {
+            Return_good_stock::where('id', $request->input('id'))
+                ->update(['status' => 'exported']);
+        }
+
+        return redirect('pcm_export');
     }
 }

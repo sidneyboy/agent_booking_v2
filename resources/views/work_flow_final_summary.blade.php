@@ -29,6 +29,69 @@
 
 <form id="work_flow_inventory_save">
     <div id="export_table_as_image">
+        
+        @if (isset($current_rgs))
+            @if (array_sum($current_rgs) != 0)
+                <table class="table table-bordered table-sm table-striped table_suggested_so">
+                    <thead>
+                        <tr>
+                            <th colspan="2" style="color:blue">THIS WILL SERVE AS UNOFFICIAL RGS PCM</th>
+                        </tr>
+                        <tr>
+                            <th colspan="2">
+                                {{ $rgs_pcm }}
+                                <input type="hidden" value="{{ $rgs_pcm }}" name="rgs_pcm">
+                            </th>
+                        </tr>
+                        <tr>
+                            <th>Desc</th>
+                            <th>RGS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($current_rgs_inventory_id as $rgs_data)
+                            <tr>
+                                <td>
+                                    <b style="color:blue">{{ $current_rgs_inventory_sku_code[$rgs_data] }}</b><br />
+
+                                    {{ $current_rgs_inventory_description[$rgs_data] }} <br />
+                                    <b style="color:green">{{ $sku_type }}</b>
+
+                                </td>
+                                <td style="text-align: right">{{ $current_rgs[$rgs_data] }}
+
+                                    @php
+                                        $rgs_sub_total = $current_rgs[$rgs_data];
+                                        $rgs_total[] = $rgs_sub_total;
+                                    @endphp
+                                    <input type="hidden" value="{{ $rgs_data }}"
+                                        name="current_rgs_inventory_id[]">
+
+                                    <input type="hidden" value="{{ $current_rgs_inventory_unit_price[$rgs_data] }}"
+                                        name="current_rgs_unit_price[{{ $rgs_data }}]">
+                                    <input type="hidden" value="{{ $current_rgs[$rgs_data] }}"
+                                        name="current_rgs_quantity[{{ $rgs_data }}]">
+                                </td>
+                                {{-- <td style="text-align: right">
+                                    {{ number_format($current_rgs_inventory_unit_price[$rgs_data], 2, '.', ',') }}</td>
+                                <td style="text-align: right">
+
+                                </td> --}}
+                            </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th style="text-align: center">Total</th>
+                            <th style="text-align: right">
+                                {{ array_sum($rgs_total) }}
+                                <input type="hidden" value="{{ array_sum($rgs_total) }}" name="total_rgs_amount">
+                            </th>
+                        </tr>
+                    </tfoot>
+                </table>
+            @endif
+        @endif
 
         @if (isset($current_bo))
             @if (array_sum($current_bo) != 0)
@@ -63,7 +126,7 @@
                                 <td style="text-align: right">{{ $current_bo[$bo_data] }}
 
                                     @php
-                                        $bo_sub_total = $current_bo_inventory_unit_price[$bo_data] * $current_bo[$bo_data];
+                                        $bo_sub_total = $current_bo[$bo_data];
                                         
                                         $bo_total[] = $bo_sub_total;
                                     @endphp
@@ -86,7 +149,7 @@
                         <tr>
                             <th style="text-align: center">Total</th>
                             <th style="text-align: right">
-                                {{ number_format(array_sum($bo_total), 2, '.', ',') }}
+                                {{ array_sum($bo_total) }}
                                 <input type="hidden" value="{{ array_sum($bo_total) }}" name="total_bo_amount">
                             </th>
                         </tr>
@@ -95,72 +158,6 @@
             @endif
         @endif
 
-
-
-
-        @if (isset($current_rgs))
-            @if (array_sum($current_rgs) != 0)
-                <table class="table table-bordered table-sm table-striped table_suggested_so">
-                    <thead>
-                        <tr>
-                            <th colspan="2" style="color:blue">THIS WILL SERVE AS UNOFFICIAL RGS PCM</th>
-                        </tr>
-                        <tr>
-                            <th colspan="2">
-                                {{ $rgs_pcm }}
-                                <input type="hidden" value="{{ $rgs_pcm }}" name="rgs_pcm">
-                            </th>
-                        </tr>
-                        <tr>
-                            <th>Desc</th>
-                            <th>RGS</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($current_rgs_inventory_id as $rgs_data)
-                            <tr>
-                                <td>
-                                    <b style="color:blue">{{ $current_rgs_inventory_sku_code[$rgs_data] }}</b><br />
-
-                                    {{ $current_rgs_inventory_description[$rgs_data] }} <br />
-                                    <b style="color:green">{{ $sku_type }}</b>
-
-                                </td>
-                                <td style="text-align: right">{{ $current_rgs[$rgs_data] }}
-
-                                    @php
-                                        $rgs_sub_total = $current_rgs_inventory_unit_price[$rgs_data] * $current_rgs[$rgs_data];
-                                        echo number_format($rgs_sub_total, 2, '.', ',');
-                                        $rgs_total[] = $rgs_sub_total;
-                                    @endphp
-                                    <input type="hidden" value="{{ $rgs_data }}"
-                                        name="current_rgs_inventory_id[]">
-
-                                    <input type="hidden" value="{{ $current_rgs_inventory_unit_price[$rgs_data] }}"
-                                        name="current_rgs_unit_price[{{ $rgs_data }}]">
-                                    <input type="hidden" value="{{ $current_rgs[$rgs_data] }}"
-                                        name="current_rgs_quantity[{{ $rgs_data }}]">
-                                </td>
-                                {{-- <td style="text-align: right">
-                                    {{ number_format($current_rgs_inventory_unit_price[$rgs_data], 2, '.', ',') }}</td>
-                                <td style="text-align: right">
-
-                                </td> --}}
-                            </tr>
-                        @endforeach
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <th style="text-align: center">Total</th>
-                            <th style="text-align: right">
-                                {{ number_format(array_sum($rgs_total), 2, '.', ',') }}
-                                <input type="hidden" value="{{ array_sum($rgs_total) }}" name="total_rgs_amount">
-                            </th>
-                        </tr>
-                    </tfoot>
-                </table>
-            @endif
-        @endif
 
         @if (array_sum($sales_order_final_quantity) != 0)
             <hr style="border: 5px solid black;">

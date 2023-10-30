@@ -139,4 +139,5 @@ Route::post('/sales_order_new_customer_export_process', [App\Http\Controllers\Sa
 
 Route::get('/pcm_export', [App\Http\Controllers\Pcm_export_controller::class, 'index'])->name('pcm_export');
 Route::post('/pcm_export_generate', [App\Http\Controllers\Pcm_export_controller::class, 'pcm_export_generate'])->name('pcm_export_generate');
+Route::post('/pcm_export_change_status', [App\Http\Controllers\Pcm_export_controller::class, 'pcm_export_change_status'])->name('pcm_export_change_status');
 
