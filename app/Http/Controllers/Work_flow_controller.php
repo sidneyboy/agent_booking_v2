@@ -314,7 +314,7 @@ class Work_flow_controller extends Controller
                 $sales_order_number = "SO-" .  $customer_principal_price->customer->store_name . "-" . $agent_user->agent_id . "-" . $date_receipt  . "-0001";
             }
 
-            return $inventory_data = Inventory::select(
+            $inventory_data = Inventory::select(
                 'sku_type',
                 'description',
                 'sku_code',

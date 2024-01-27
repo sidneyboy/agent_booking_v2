@@ -53,8 +53,8 @@
                             <select name="sku_type" id="sku_type" class="form-control form-control-sm select2" required
                                 style="width:100%;">
                                 <option value="" default>SELECT</option>
-                                <option value="BUTAL">BUTAL</option>
                                 <option value="CASE">CASE</option>
+                                <option value="BUTAL">BUTAL</option>
                             </select>
                         </div>
                         <div class="form-group">
