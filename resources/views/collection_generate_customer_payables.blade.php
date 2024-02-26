@@ -18,18 +18,19 @@
         <table class="table table-bordered table-sm" id="accounts_payable">
             <thead>
                 <tr>
-                    <th>Store Name</th>
-                    <th>DR</th>
-                    <th>Date Delivered</th>
-                    <th>Principal</th>
-                    <th>Sku Type</th>
-                    <th>Status</th>
-                    <th>Mode of Payment</th>
-                    <th>Amount</th>
-                    <th>Amount Paid</th>
-                    <th>Current Bo</th>
-                    <th>Balance</th>
-                    <th>No of Transactions</th>
+                    <th class="text-center">Store Name</th>
+                    <th class="text-center">DR</th>
+                    <th class="text-center">Date Delivered</th>
+                    <th class="text-center">Principal</th>
+                    <th class="text-center">Sku Type</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Mode of Payment</th>
+                    <th class="text-center">Amount</th>
+                    <th class="text-center">Amount Paid</th>
+                    <th class="text-center">T-BO</th>
+                    <th class="text-center">T-RGS</th>
+                    <th class="text-center">Balance</th>
+                    <th class="text-center">No of Transactions</th>
                 </tr>
             </thead>
             <tbody>
@@ -49,25 +50,41 @@
                         <td style="text-align: right">{{ number_format($data->total_amount, 2, '.', ',') }}</td>
                         <td style="text-align: right">{{ number_format($data->amount_paid, 2, '.', ',') }}</td>
                         <td style="text-align: right">
-                            @if($data->bad_order)
-                                {{ number_format($data->bad_order->total_bo, 2, '.', ',') }}
+                            @if ($data->bad_order_total)
+                                {{ number_format($data->bad_order_total->total_bo, 2, '.', ',') }}
                                 @php
-                                    $total_bo = $data->bad_order->total_bo;
+                                    $total_bo = $data->bad_order_total->total_bo;
                                 @endphp
-                            @else 
+                            @else
                                 @php
                                     $total_bo = 0;
                                 @endphp
                             @endif
                         </td>
                         <td style="text-align: right">
+                            @if ($data->rgs_total)
+                                {{ number_format($data->rgs_total->total_bo, 2, '.', ',') }}
+                                @php
+                                    $total_rgs = $data->rgs_total->total_bo;
+                                @endphp
+                            @else
+                                @php
+                                    $total_rgs = 0;
+                                @endphp
+                            @endif
+                        </td>
+                        <td style="text-align: right">
                             @php
-                                $sales_register_balance = $data->total_amount - $data->amount_paid - $total_bo;
+                                $sales_register_balance = $data->total_amount - $data->amount_paid - $total_bo - $total_rgs;
                                 echo number_format($sales_register_balance, 2, '.', ',');
                             @endphp
-                            <input type="hidden" value="{{ $sales_register_balance }}" name="sales_register_balance[{{ $data->id }}]">
-                            <input type="hidden" value="{{ $total_bo}}"
+                            <input type="hidden" value="{{ $sales_register_balance }}"
+                                name="sales_register_balance[{{ $data->id }}]">
+                            <input type="hidden" value="{{ $total_bo }}"
                                 name="sales_register_total_bo[{{ $data->id }}]">
+
+                            <input type="hidden" value="{{ $total_rgs }}"
+                                name="sales_register_total_rgs[{{ $data->id }}]">
                         </td>
 
                         <td>
@@ -79,12 +96,18 @@
                             <input type="hidden" name="sales_register_store_name[{{ $data->id }}]"
                                 value="{{ $data->customer->store_name }}">
                             <input type="hidden" name="sales_register_id[]" value="{{ $data->id }}">
-                            <input type="hidden" name="sales_register_dr[{{ $data->id }}]" value="{{ $data->dr }}">
-                            <input type="hidden" value="{{ $data->total_amount }}" name="sales_register_total_amount[{{ $data->id }}]">
-                            <input type="hidden" value="{{ $data->amount_paid }}" name="sales_register_amount_paid[{{ $data->id }}]">
-                            <input type="hidden" value="{{ $data->sku_type }}" name="sales_register_sku_type[{{ $data->id }}]">
-                            <input type="hidden" value="{{ $data->principal_id }}" name="sales_register_principal_id[{{ $data->id }}]">
-                            <input type="hidden" value="{{ $data->principal_id }}" name="sales_register_principal_id[{{ $data->id }}]">
+                            <input type="hidden" name="sales_register_dr[{{ $data->id }}]"
+                                value="{{ $data->dr }}">
+                            <input type="hidden" value="{{ $data->total_amount }}"
+                                name="sales_register_total_amount[{{ $data->id }}]">
+                            <input type="hidden" value="{{ $data->amount_paid }}"
+                                name="sales_register_amount_paid[{{ $data->id }}]">
+                            <input type="hidden" value="{{ $data->sku_type }}"
+                                name="sales_register_sku_type[{{ $data->id }}]">
+                            <input type="hidden" value="{{ $data->principal_id }}"
+                                name="sales_register_principal_id[{{ $data->id }}]">
+                            <input type="hidden" value="{{ $data->principal_id }}"
+                                name="sales_register_principal_id[{{ $data->id }}]">
                             <input type="hidden" value="{{ $data->principal->principal }}"
                                 name="sales_register_principal[{{ $data->id }}]">
 

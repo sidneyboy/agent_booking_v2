@@ -102,6 +102,11 @@ Route::post('/collection_save', [App\Http\Controllers\Collection_controller::cla
 
 
 Route::get('/collection_export', [App\Http\Controllers\Collection_controller::class, 'collection_export'])->name('collection_export');
+Route::post('/collection_generate_date', [App\Http\Controllers\Collection_controller::class, 'collection_generate_date'])->name('collection_generate_date');
+
+
+
+
 
 Route::get('/new_customer', [App\Http\Controllers\Customer_controller::class, 'new_customer'])->name('new_customer');
 Route::get('/update_customer', [App\Http\Controllers\Customer_controller::class, 'update_customer'])->name('update_customer');

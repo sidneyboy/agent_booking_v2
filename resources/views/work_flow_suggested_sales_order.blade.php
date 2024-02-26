@@ -22,8 +22,8 @@
                     <tr>
                         <th>Desc</th>
                         <th>RGS</th>
-                        {{-- <th>U/P</th>
-                        <th>Total</th> --}}
+                        <th>U/P</th>
+                        <th>Total</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,7 +38,7 @@
                                 <td style="text-align: right">{{ $current_rgs[$rgs_data] }}
                                     @php
                                         $rgs_sub_total = $current_rgs[$rgs_data];
-                                        
+
                                         $rgs_total[] = $rgs_sub_total;
                                     @endphp
                                     <input type="hidden" value="{{ $rgs_data }}" name="current_rgs_inventory_id[]">
@@ -51,11 +51,15 @@
                                     <input type="hidden" value="{{ $current_inventory_unit_price[$rgs_data] }}"
                                         name="current_rgs_inventory_unit_price[{{ $rgs_data }}]">
                                 </td>
-                                {{-- <td style="text-align: right">
+                                <td style="text-align: right">
                                     {{ number_format($current_inventory_unit_price[$rgs_data], 2, '.', ',') }}</td>
                                 <td style="text-align: right">
-
-                                </td> --}}
+                                    @php
+                                        $rgs_sub_total = $current_inventory_unit_price[$rgs_data] * $current_rgs[$rgs_data];
+                                        $rgs_total_price[] = $rgs_sub_total;
+                                        echo number_format($rgs_sub_total, 2, '.', ',');
+                                    @endphp
+                                </td>
                             </tr>
                         @endif
                     @endforeach
@@ -64,6 +68,9 @@
                     <tr>
                         <th style="text-align: center">Total</th>
                         <th style="text-align: right">{{ array_sum($rgs_total) }}</th>
+                        <th></th>
+                        <th style="text-align: right">{{ number_format(array_sum($rgs_total_price), 2, '.', ',') }}
+                        </th>
                     </tr>
                 </tfoot>
             </table>
@@ -81,8 +88,8 @@
                     <tr>
                         <th>Desc</th>
                         <th>BO</th>
-                        {{-- <th>U/P</th>
-                        <th>Sub Total</th> --}}
+                        <th>U/P</th>
+                        <th>Sub Total</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -96,7 +103,7 @@
                                 </td>
                                 <td style="text-align: right">{{ $current_bo[$bo_data] }}
                                     @php
-                                        $bo_sub_total =  $current_bo[$bo_data];
+                                        $bo_sub_total = $current_bo[$bo_data];
                                         $bo_total[] = $bo_sub_total;
                                     @endphp
                                     <input type="hidden" value="{{ $bo_data }}" name="current_bo_inventory_id[]">
@@ -109,19 +116,26 @@
                                     <input type="hidden" value="{{ $current_inventory_unit_price[$bo_data] }}"
                                         name="current_bo_inventory_unit_price[{{ $bo_data }}]">
                                 </td>
-                                {{-- <td style="text-align: right">
+                                <td style="text-align: right">
                                     {{ number_format($current_inventory_unit_price[$bo_data], 2, '.', ',') }}</td>
                                 <td style="text-align: right">
-
-                                </td> --}}
+                                    @php
+                                        $bo_sub_total = $current_inventory_unit_price[$bo_data] * $current_bo[$bo_data];
+                                        $bo_total_price[] = $bo_sub_total;
+                                        echo number_format($bo_sub_total, 2, '.', ',');
+                                    @endphp
+                                </td>
                             </tr>
                         @endif
                     @endforeach
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th  style="text-align: center">Total</th>
+                        <th style="text-align: center">Total</th>
                         <th style="text-align: right">{{ array_sum($bo_total) }}</th>
+                        <th></th>
+                        <th style="text-align: right">{{ number_format(array_sum($rgs_total_price), 2, '.', ',') }}
+                        </th>
                     </tr>
                 </tfoot>
             </table>

@@ -31,7 +31,10 @@
                         Amount Paid
                     </th>
                     <th rowspan="2" style="vertical-align: middle;font-weight:bold;text-align:center">
-                        Current Bo
+                        T-BO
+                    </th>
+                    <th rowspan="2" style="vertical-align: middle;font-weight:bold;text-align:center">
+                        T-RGS
                     </th>
                     <th rowspan="2" style="vertical-align: middle;font-weight:bold;text-align:center">
                         Balance
@@ -83,7 +86,7 @@
                                 <input type="text" name="sales_register_or_number[{{ $key }}]"
                                     style="width:150px" class="form-control" required>
                             </td>
-                            <td>{{ $key }}</td>
+                            <td>{{ $sales_register_dr[$key] }}</td>
                             <td>{{ $sales_register_store_name[$key] }}</td>
                             <td>{{ $sales_register_principal[$key] }}</td>
                             <td>{{ $sales_register_sku_type[$key] }}</td>
@@ -91,6 +94,7 @@
                             <td>{{ $sales_register_total_amount[$key] }}</td>
                             <td>{{ $sales_register_amount_paid[$key] }}</td>
                             <td>{{ $sales_register_total_bo[$key] }}</td>
+                            <td>{{ $sales_register_total_rgs[$key] }}</td>
                             <td>{{ $sales_register_balance[$key] }}</td>
                             <td>
 
@@ -109,7 +113,8 @@
                                 border-radius: 0.25rem;
                                 box-shadow: inset 0 0 0 transparent;
                                 transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;"
-                                    name="sales_register_cash[{{ $key }}]" class="currency-default" value="0" required>
+                                    name="sales_register_cash[{{ $key }}]" class="currency-default"
+                                    value="0" required>
                             </td>
                             <td>
                                 <input type="text"
@@ -127,8 +132,8 @@
                                 border-radius: 0.25rem;
                                 box-shadow: inset 0 0 0 transparent;
                                 transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;"
-                                    name="sales_register_cash_add_refer[{{ $key }}]" class="currency-default" value="0"
-                                    required>
+                                    name="sales_register_cash_add_refer[{{ $key }}]" class="currency-default"
+                                    value="0" required>
                             </td>
                             <td>
 
@@ -147,7 +152,8 @@
                                 border-radius: 0.25rem;
                                 box-shadow: inset 0 0 0 transparent;
                                 transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;"
-                                    name="sales_register_cheque[{{ $key }}]" class="currency-default" value="0" required>
+                                    name="sales_register_cheque[{{ $key }}]" class="currency-default"
+                                    value="0" required>
                             </td>
                             <td>
                                 <input type="text"
@@ -165,8 +171,8 @@
                                 border-radius: 0.25rem;
                                 box-shadow: inset 0 0 0 transparent;
                                 transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;"
-                                    name="sales_register_cheque_add_refer[{{ $key }}]" class="currency-default" value="0"
-                                    required>
+                                    name="sales_register_cheque_add_refer[{{ $key }}]"
+                                    class="currency-default" value="0" required>
                             </td>
                             <td>
                                 <input type="text"
@@ -184,17 +190,17 @@
                                 border-radius: 0.25rem;
                                 box-shadow: inset 0 0 0 transparent;
                                 transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;"
-                                    name="sales_register_less_refer[{{ $key }}]" class="currency-default" value="0"
-                                    required>
+                                    name="sales_register_less_refer[{{ $key }}]" class="currency-default"
+                                    value="0" required>
                             </td>
-                            
+
                             <td>
-                                <input type="text" name="sales_register_specify[{{ $key }}]" style="width: 150px;"
-                                    class="form-control">
+                                <input type="text" name="sales_register_specify[{{ $key }}]"
+                                    style="width: 150px;" class="form-control">
                             </td>
                             <td>
-                                <input type="text" name="sales_register_remarks[{{ $key }}]" style="width: 150px;"
-                                    class="form-control">
+                                <input type="text" name="sales_register_remarks[{{ $key }}]"
+                                    style="width: 150px;" class="form-control">
 
                                 <input type="hidden" name="sales_register_store_name[{{ $key }}]"
                                     value="{{ $sales_register_store_name[$key] }}">
@@ -204,19 +210,18 @@
                                     value="{{ $sales_register_principal[$key] }}">
                                 <input type="hidden" name="sales_register_sku_type[{{ $key }}]"
                                     value="{{ $sales_register_sku_type[$key] }}">
-                                <input type="hidden"
-                                    name="sales_register_mode_of_transaction[{{ $key }}]"
+                                <input type="hidden" name="sales_register_mode_of_transaction[{{ $key }}]"
                                     value="{{ $sales_register_mode_of_transaction[$key] }}">
-                                <input type="hidden"
-                                    name="sales_register_total_amount[{{ $key }}]"
+                                <input type="hidden" name="sales_register_total_amount[{{ $key }}]"
                                     value="{{ $sales_register_total_amount[$key] }}">
                                 <input type="hidden" name="sales_register_total_bo[{{ $key }}]"
                                     value="{{ $sales_register_total_bo[$key] }}">
-                                <input type="hidden"
-                                    name="sales_register_amount_paid[{{ $key }}]"
+                                <input type="hidden" name="sales_register_total_rgs[{{ $key }}]"
+                                    value="{{ $sales_register_total_rgs[$key] }}">
+                                <input type="hidden" name="sales_register_amount_paid[{{ $key }}]"
                                     value="{{ $sales_register_amount_paid[$key] }}">
                                 <input type="hidden" name="sales_register_dr[{{ $key }}]"
-                                    value="{{ $key }}">
+                                    value="{{ $sales_register_dr[$key] }}">
                                 <input type="hidden" name="sales_register_id[{{ $key }}]"
                                     value="{{ $key }}">
                                 <input type="hidden"
@@ -229,10 +234,9 @@
                             $final_sales_register_number_of_transactions = $number_of_transactions - 1;
                         @endphp
                         <tr>
-                            <td> <input type="text"
-                                    name="sales_register_or_number[{{ $key }}]"
+                            <td> <input type="text" name="sales_register_or_number[{{ $key }}]"
                                     style="width:150px;" class="form-control" required></td>
-                            <td>{{ $key }}</td>
+                            <td>{{ $sales_register_dr[$key] }}</td>
                             <td>{{ $sales_register_store_name[$key] }}</td>
                             <td>{{ $sales_register_principal[$key] }}</td>
                             <td>{{ $sales_register_sku_type[$key] }}</td>
@@ -240,6 +244,7 @@
                             <td>{{ $sales_register_total_amount[$key] }}</td>
                             <td>{{ $sales_register_amount_paid[$key] }}</td>
                             <td>{{ $sales_register_total_bo[$key] }}</td>
+                            <td>{{ $sales_register_total_rgs[$key] }}</td>
                             <td>{{ $sales_register_balance[$key] }}</td>
                             <td>
 
@@ -258,8 +263,8 @@
                     border-radius: 0.25rem;
                     box-shadow: inset 0 0 0 transparent;
                     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;"
-                                    name="sales_register_cash[{{ $key }}]"
-                                    class="currency-default" value="0" required>
+                                    name="sales_register_cash[{{ $key }}]" class="currency-default"
+                                    value="0" required>
                             </td>
                             <td>
                                 <input type="text"
@@ -297,8 +302,8 @@
                     border-radius: 0.25rem;
                     box-shadow: inset 0 0 0 transparent;
                     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;"
-                                    name="sales_register_cheque[{{ $key }}]"
-                                    class="currency-default" value="0" required>
+                                    name="sales_register_cheque[{{ $key }}]" class="currency-default"
+                                    value="0" required>
                             </td>
                             <td>
                                 <input type="text"
@@ -335,8 +340,8 @@
                     border-radius: 0.25rem;
                     box-shadow: inset 0 0 0 transparent;
                     transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;"
-                                    name="sales_register_less_refer[{{ $key }}]"
-                                    class="currency-default" value="0" required>
+                                    name="sales_register_less_refer[{{ $key }}]" class="currency-default"
+                                    value="0" required>
                             </td>
                             <td>
                                 <input type="text" name="sales_register_specify[{{ $key }}]"
@@ -346,8 +351,7 @@
                                 <input type="text" name="sales_register_remarks[{{ $key }}]"
                                     style="width: 150px;" class="form-control">
 
-                                <input type="hidden"
-                                    name="sales_register_store_name[{{ $key }}]"
+                                <input type="hidden" name="sales_register_store_name[{{ $key }}]"
                                     value="{{ $sales_register_store_name[$key] }}">
                                 <input type="hidden" name="sales_register_balance[{{ $key }}]"
                                     value="{{ $sales_register_balance[$key] }}">
@@ -355,19 +359,18 @@
                                     value="{{ $sales_register_principal[$key] }}">
                                 <input type="hidden" name="sales_register_sku_type[{{ $key }}]"
                                     value="{{ $sales_register_sku_type[$key] }}">
-                                <input type="hidden"
-                                    name="sales_register_mode_of_transaction[{{ $key }}]"
+                                <input type="hidden" name="sales_register_mode_of_transaction[{{ $key }}]"
                                     value="{{ $sales_register_mode_of_transaction[$key] }}">
-                                <input type="hidden"
-                                    name="sales_register_total_amount[{{ $key }}]"
+                                <input type="hidden" name="sales_register_total_amount[{{ $key }}]"
                                     value="{{ $sales_register_total_amount[$key] }}">
                                 <input type="hidden" name="sales_register_total_bo[{{ $key }}]"
                                     value="{{ $sales_register_total_bo[$key] }}">
-                                <input type="hidden"
-                                    name="sales_register_amount_paid[{{ $key }}]"
+                                <input type="hidden" name="sales_register_total_rgs[{{ $key }}]"
+                                    value="{{ $sales_register_total_rgs[$key] }}">
+                                <input type="hidden" name="sales_register_amount_paid[{{ $key }}]"
                                     value="{{ $sales_register_amount_paid[$key] }}">
                                 <input type="hidden" name="sales_register_dr[{{ $key }}]"
-                                    value="{{ $key }}">
+                                    value="{{ $sales_register_dr[$key] }}">
                                 <input type="hidden" name="sales_register_id[{{ $key }}]"
                                     value="{{ $key }}">
                                 <input type="hidden"
@@ -377,17 +380,7 @@
                         </tr>
                         @for ($i = 0; $i < $final_sales_register_number_of_transactions; $i++)
                             <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
+                                <th colspan="12"></th>
                                 <td>
                                     <input type="text"
                                         style="text-align: right;    display: block;
@@ -407,10 +400,7 @@
                                         name="lower_sales_register_cash_add_refer[{{ $key . '-' . $i }}]"
                                         class="currency-default" value="0" required>
                                 </td>
-                                <td>
-
-
-                                </td>
+                                <td></td>
                                 <td>
                                     <input type="text"
                                         style="text-align: right;    display: block;
@@ -450,15 +440,14 @@
                                         class="currency-default" value="0" required>
                                 </td>
                                 <td>
-                                    <input type="text"
-                                        name="lower_sales_register_specify[{{ $key . '-' . $i }}]"
+                                    <input type="text" name="lower_sales_register_specify[{{ $key . '-' . $i }}]"
                                         style="width: 150px;" class="form-control">
                                 </td>
                                 <td>
-                                    <input type="text"
-                                        name="lower_sales_register_remarks[{{ $key . '-' . $i }}]"
+                                    <input type="text" name="lower_sales_register_remarks[{{ $key . '-' . $i }}]"
                                         style="width: 150px;" class="form-control">
                                 </td>
+
                             </tr>
                         @endfor
                     @endif

@@ -19,6 +19,7 @@
                     <th>RGS</th>
                     <th>BO</th>
                     <th>Remaining</th>
+                    <th>U/P</th>
                 </tr>
             </thead>
             <tbody>
@@ -31,8 +32,7 @@
                             <input type="hidden" name="current_inventory_id[]" value="{{ $data->id }}">
                             {{-- <input type="hidden" name="current_inventory_description[{{ $data->id }}]"
                                 value="{{ $data->description }}"> --}}
-                            {{-- <input type="text" name="current_inventory_unit_price[{{ $data->id }}]"
-                                value="{{ $data->unit_price }}"> --}}
+
                         </td>
                         <td>
                             <input style="width:100px;text-align:center;" name="current_rgs[{{ $data->id }}]"
@@ -45,10 +45,36 @@
                         </td>
                         <td>
                             <input style="width:100px;text-align:center;"
-                                name="current_remaining_inventory[{{ $data->id }}]" type="number"
-                                min="0" value="0" required class="form-control">
+                                name="current_remaining_inventory[{{ $data->id }}]" type="number" min="0"
+                                value="0" required class="form-control">
                             {{-- <input type="hidden" name="prev_delivered_inventory[{{ $data->inventory_id }}]"
                                 value="0"> --}}
+                        </td>
+                        <td>
+                            @if ($customer_principal_price == 'price_1')
+                                {{ $data->price_1 }}
+                                @php
+                                    $unit_price = $data->price_1;
+                                @endphp
+                            @elseif ($customer_principal_price == 'price_2')
+                                {{ $data->price_2 }}
+                                @php
+                                    $unit_price = $data->price_2;
+                                @endphp
+                            @elseif ($customer_principal_price == 'price_3')
+                                {{ $data->price_3 }}
+                                @php
+                                    $unit_price = $data->price_3;
+                                @endphp
+                            @elseif ($customer_principal_price == 'price_4')
+                                {{ $data->price_4 }}
+                                @php
+                                    $unit_price = $data->price_4;
+                                @endphp
+                            @endif
+
+                            <input type="hidden" name="current_inventory_unit_price[{{ $data->id }}]"
+                                value="{{ $unit_price }}">
                         </td>
                     </tr>
                 @endforeach
@@ -66,7 +92,7 @@
 <script>
     $("#work_flow_suggested_sales_order").on('submit', (function(e) {
         e.preventDefault();
-        //$('.loading').show();
+        $('.loading').show();
         Swal.fire({
             title: 'Save as draft ?',
             showDenyButton: true,
@@ -83,7 +109,7 @@
                     cache: false,
                     processData: false,
                     success: function(data) {
-                        
+                        $('.loading').hide();
                         if (data == 'saved') {
                             $('.loading').hide();
                             Swal.fire(
@@ -91,7 +117,7 @@
                                 '',
                                 'success'
                             )
-                            
+
                             window.location.href = "/work_flow";
                         }
                     },

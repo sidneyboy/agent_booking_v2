@@ -24,13 +24,13 @@
                         <th></th>
                     </tr>
                     <tr>
-                        <th>ID</th>
-                        <th>Code</th>
-                        <th>Description</th>
-                        <th>Sku Type</th>
-                        <th>Quantity</th>
-                        {{-- <th>U/P</th>
-                    <th>Total</th> --}}
+                        <th class="text-center">ID</th>
+                        <th class="text-center">Code</th>
+                        <th class="text-center">Description</th>
+                        <th class="text-center">Sku Type</th>
+                        <th class="text-center">Quantity</th>
+                        <th class="text-center">U/P</th>
+                        <th class="text-center">Total</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -41,28 +41,28 @@
                             <td>{{ $data->inventory->description }}</td>
                             <td>{{ $data->inventory->sku_type }}</td>
                             <td style="text-align: right">{{ $data->quantity }}</td>
-                            <td style="text-align: right"></td>
+                            <td style="text-align: right">{{ $data->unit_price }}</td>
                             <td style="text-align: right">
-                                {{-- @php
-                                $total = $data->quantity * $data->unit_price;
-                                $sum_total[] = $total;
-                                echo $total;
-                            @endphp --}}
+                                @php
+                                    $total = $data->quantity * $data->unit_price;
+                                    $sum_total[] = $total;
+                                    echo $total;
+                                @endphp
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
-                {{-- <tfoot>
-                <tr>
-                    <th>Total</th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th style="text-align: right"></th>
-                </tr>
-            </tfoot> --}}
+                <tfoot>
+                    <tr>
+                        <th>Total</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th style="text-align: right">{{ array_sum($sum_total) }}</th>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     @else
@@ -95,8 +95,8 @@
                         <th>Description</th>
                         <th>Sku Type</th>
                         <th>Quantity</th>
-                        {{-- <th>U/P</th>
-                            <th>Total</th> --}}
+                        <th>U/P</th>
+                        <th>Total</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -107,37 +107,36 @@
                             <td>{{ $data->inventory->description }}</td>
                             <td>{{ $data->inventory->sku_type }}</td>
                             <td style="text-align: right">{{ $data->quantity }}</td>
-                            <td style="text-align: right"></td>
+                            <td style="text-align: right">{{ $data->unit_price }}</td>
                             <td style="text-align: right">
-                                {{-- @php
-                            $total = $data->quantity * $data->unit_price;
-                            $sum_total[] = $total;
-                            echo $total;
-                        @endphp --}}
+                                @php
+                                    $total = $data->quantity * $data->unit_price;
+                                    $sum_total[] = $total;
+                                    echo $total;
+                                @endphp
 
                             </td>
                         </tr>
                     @endforeach
                 </tbody>
-                {{-- <tfoot>
-            <tr>
-                <th>Total</th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th style="text-align: right"></th>
-            </tr>
-        </tfoot> --}}
+                <tfoot>
+                    <tr>
+                        <th>Total</th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th style="text-align: right">{{ array_sum($sum_total) }}</th>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     @endif
-        <input type="hidden" name="transaction" value="{{ $transaction }}">
+    <input type="hidden" name="transaction" value="{{ $transaction }}">
     <br />
-    <button
-        onclick="exportTableToCSV('{{ $filename }}.csv')"
-        class="btn btn-success btn-block" type="submit">Export</button>
+    <button onclick="exportTableToCSV('{{ $filename }}.csv')" class="btn btn-success btn-block"
+        type="submit">Export</button>
 </form>
 
 <script>

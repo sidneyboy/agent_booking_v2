@@ -9,6 +9,7 @@ use App\Models\Customer;
 use App\Models\Collection;
 use App\Models\Collection_details;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class Collection_controller extends Controller
 {
@@ -28,6 +29,7 @@ class Collection_controller extends Controller
             ->where('customer_id', $request->input('customer_id'))
             ->where('status', '!=', 'paid')
             ->get();
+
 
         $sales_order = Sales_order::select('id', 'total_amount', 'principal_id', 'sku_type', 'status', 'customer_id', 'amount_paid')
             ->where('customer_id', $request->input('customer_id'))
@@ -57,6 +59,7 @@ class Collection_controller extends Controller
             'sales_register_store_name' => $request->input('sales_register_store_name'),
             'sales_register_balance' => $request->input('sales_register_balance'),
             'sales_register_total_bo' => $request->input('sales_register_total_bo'),
+            'sales_register_total_rgs' => $request->input('sales_register_total_rgs'),
             'sales_register_number_of_transactions' => $sales_register_number_of_transactions,
             'sales_register_total_amount' => $request->input('sales_register_total_amount'),
             'sales_register_amount_paid' => $request->input('sales_register_amount_paid'),
@@ -108,6 +111,7 @@ class Collection_controller extends Controller
             'sales_register_store_name' => $request->input('sales_register_store_name'),
             'sales_register_total_amount' => $request->input('sales_register_total_amount'),
             'sales_register_total_bo' => $request->input('sales_register_total_bo'),
+            'sales_register_total_rgs' => $request->input('sales_register_total_rgs'),
             'sales_register_number_of_transactions' => $request->input('sales_register_number_of_transactions'),
             'sales_register_balance' => $request->input('sales_register_balance'),
             'sales_register_or_number' => $request->input('sales_register_or_number'),
@@ -117,10 +121,10 @@ class Collection_controller extends Controller
 
     public function collection_save(Request $request)
     {
-        date_default_timezone_set('Asia/Manila');
-        $date = date('Y-m-d H:i:s');
-
         //return $request->input();
+
+        $date = DB::select('SELECT CURDATE()');
+        $time = DB::select('SELECT CURTIME()');
 
         foreach ($request->input('sales_register_number_of_transactions') as $key => $number_of_transactions) {
             if ($number_of_transactions == 1) {
@@ -132,12 +136,15 @@ class Collection_controller extends Controller
                     'total_amount' => $request->input('sales_register_total_amount')[$key],
                     'amount_paid' => $request->input('sales_register_amount_paid')[$key],
                     'mode_of_transaction' => $request->input('sales_register_mode_of_transaction')[$key],
-                    'dr' => $key,
+                    'dr' => $request->input('sales_register_dr')[$key],
                     'sku_type' => $request->input('sales_register_sku_type')[$key],
                     'balance' => 0,
-                    'remarks' => '',
+                    'remarks' => $request->input('sales_register_remarks')[$key],
                     'exported' => '',
                     'total_bo' => $request->input('sales_register_total_bo')[$key],
+                    'total_rgs' => $request->input('sales_register_total_rgs')[$key],
+                    'date' => $date[0]->{'CURDATE()'},
+                    'time' => $time[0]->{'CURTIME()'},
                 ]);
 
                 $sales_register_collection_saved->save();
@@ -168,9 +175,12 @@ class Collection_controller extends Controller
                     'dr' => $key,
                     'sku_type' => $request->input('sales_register_sku_type')[$key],
                     'balance' => 0,
-                    'remarks' => '',
+                    'remarks' => $request->input('sales_register_remarks')[$key],
                     'exported' => '',
                     'total_bo' => $request->input('sales_register_total_bo')[$key],
+                    'total_rgs' => $request->input('sales_register_total_rgs')[$key],
+                    'date' => $date[0]->{'CURDATE()'},
+                    'time' => $time[0]->{'CURTIME()'},
                 ]);
 
                 $sales_register_collection_saved->save();
@@ -213,7 +223,7 @@ class Collection_controller extends Controller
 
 
 
-        return 'saved';
+        // return 'saved';
     }
 
     public function collection_export()
@@ -221,11 +231,26 @@ class Collection_controller extends Controller
         date_default_timezone_set('Asia/Manila');
         $date = date('Y-m-d H:i:s');
         $agent_user = Agent_user::first();
-        $collection = Collection::where('exported', '!=', 'exported')->get();
-        return view('collection_export', [
-            'collection' => $collection,
-        ])->with('active', 'collection_export')
+        //$collection = Collection::where('exported', '!=', 'exported')->get();
+        return view('collection_export')->with('active', 'collection_export')
             ->with('agent_user', $agent_user)
             ->with('date', $date);
+    }
+
+    public function collection_generate_date(Request $request)
+    {
+        //return $request->input();
+        $explode = explode('-', $request->input('date_range'));
+        $date_from = date('Y-m-d', strtotime($explode[0]));
+        $date_to = date('Y-m-d', strtotime($explode[1]));
+
+        $collection = Collection::whereBetween('date', [$date_from, $date_to])->get();
+        $agent_user = Agent_user::first();
+        return view('collection_generate_date', [
+            'collection' => $collection,
+            'agent_user' => $agent_user,
+            'date_from' => $date_from,
+            'date_to' => $date_to,
+        ]);
     }
 }

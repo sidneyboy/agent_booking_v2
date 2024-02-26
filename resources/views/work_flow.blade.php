@@ -183,15 +183,14 @@
                 cache: false,
                 processData: false,
                 success: function(data) {
+                    $('.loading').hide();
                     if (data == 'principal_price_lacking') {
                         Swal.fire(
                             'Customer Principal Price Lacking',
                             'Update Customer First!',
                             'error'
                         );
-                        $('.loading').hide();
                     } else {
-                        $('.loading').hide();
                         $('#work_flow_show_inventory_page').html(data);
                     }
                 },

@@ -29,16 +29,16 @@
 
 <form id="work_flow_inventory_save">
     <div id="export_table_as_image">
-        
+
         @if (isset($current_rgs))
             @if (array_sum($current_rgs) != 0)
                 <table class="table table-bordered table-sm table-striped table_suggested_so">
                     <thead>
                         <tr>
-                            <th colspan="2" style="color:blue">THIS WILL SERVE AS UNOFFICIAL RGS PCM</th>
+                            <th colspan="4" style="color:blue">THIS WILL SERVE AS UNOFFICIAL RGS PCM</th>
                         </tr>
                         <tr>
-                            <th colspan="2">
+                            <th colspan="4">
                                 {{ $rgs_pcm }}
                                 <input type="hidden" value="{{ $rgs_pcm }}" name="rgs_pcm">
                             </th>
@@ -46,6 +46,8 @@
                         <tr>
                             <th>Desc</th>
                             <th>RGS</th>
+                            <th>U/P</th>
+                            <th>Total</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -64,19 +66,22 @@
                                         $rgs_sub_total = $current_rgs[$rgs_data];
                                         $rgs_total[] = $rgs_sub_total;
                                     @endphp
-                                    <input type="hidden" value="{{ $rgs_data }}"
-                                        name="current_rgs_inventory_id[]">
+                                    <input type="hidden" value="{{ $rgs_data }}" name="current_rgs_inventory_id[]">
 
                                     <input type="hidden" value="{{ $current_rgs_inventory_unit_price[$rgs_data] }}"
                                         name="current_rgs_unit_price[{{ $rgs_data }}]">
                                     <input type="hidden" value="{{ $current_rgs[$rgs_data] }}"
                                         name="current_rgs_quantity[{{ $rgs_data }}]">
                                 </td>
-                                {{-- <td style="text-align: right">
+                                <td style="text-align: right">
                                     {{ number_format($current_rgs_inventory_unit_price[$rgs_data], 2, '.', ',') }}</td>
                                 <td style="text-align: right">
-
-                                </td> --}}
+                                    @php
+                                        $rgs_sub_total = $current_rgs_inventory_unit_price[$rgs_data] * $current_rgs[$rgs_data];
+                                        $rgs_total_price[] = $rgs_sub_total;
+                                        echo number_format($rgs_sub_total, 2, '.', ',');
+                                    @endphp
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -85,7 +90,10 @@
                             <th style="text-align: center">Total</th>
                             <th style="text-align: right">
                                 {{ array_sum($rgs_total) }}
-                                <input type="hidden" value="{{ array_sum($rgs_total) }}" name="total_rgs_amount">
+                                <input type="hidden" value="{{ array_sum($rgs_total_price) }}" name="total_rgs_amount">
+                            </th>
+                            <th></th>
+                            <th style="text-align: right">{{ number_format(array_sum($rgs_total_price), 2, '.', ',') }}
                             </th>
                         </tr>
                     </tfoot>
@@ -98,10 +106,10 @@
                 <table class="table table-bordered table-sm table-striped table_suggested_so">
                     <thead>
                         <tr>
-                            <th colspan="2" style="color:blue">THIS WILL SERVE AS UNOFFICIAL BO PCM</th>
+                            <th colspan="4" style="color:blue">THIS WILL SERVE AS UNOFFICIAL BO PCM</th>
                         </tr>
                         <tr>
-                            <th colspan="2">
+                            <th colspan="4">
                                 {{ $bo_pcm }}
                                 <input type="hidden" value="{{ $bo_pcm }}" name="bo_pcm">
                             </th>
@@ -109,8 +117,8 @@
                         <tr>
                             <th>Desc</th>
                             <th>BO</th>
-                            {{-- <th>U/P</th>
-                            <th>Sub Total</th> --}}
+                            <th>U/P</th>
+                            <th>Sub Total</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -127,7 +135,7 @@
 
                                     @php
                                         $bo_sub_total = $current_bo[$bo_data];
-                                        
+
                                         $bo_total[] = $bo_sub_total;
                                     @endphp
                                     <input type="hidden" value="{{ $bo_data }}" name="current_bo_inventory_id[]">
@@ -137,11 +145,15 @@
                                     <input type="hidden" value="{{ $current_bo[$bo_data] }}"
                                         name="current_bo_quantity[{{ $bo_data }}]">
                                 </td>
-                                {{-- <td style="text-align: right">
+                                <td style="text-align: right">
                                     {{ number_format($current_bo_inventory_unit_price[$bo_data], 2, '.', ',') }}</td>
                                 <td style="text-align: right">
-                                    
-                                </td> --}}
+                                    @php
+                                        $bo_sub_total = $current_bo_inventory_unit_price[$bo_data] * $current_bo[$bo_data];
+                                        $bo_total_price[] = $bo_sub_total;
+                                        echo number_format($bo_sub_total, 2, '.', ',');
+                                    @endphp
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>
@@ -150,7 +162,10 @@
                             <th style="text-align: center">Total</th>
                             <th style="text-align: right">
                                 {{ array_sum($bo_total) }}
-                                <input type="hidden" value="{{ array_sum($bo_total) }}" name="total_bo_amount">
+                                <input type="hidden" value="{{ array_sum($bo_total_price) }}" name="total_bo_amount">
+                            </th>
+                            <th></th>
+                            <th style="text-align: right">{{ number_format(array_sum($bo_total_price), 2, '.', ',') }}
                             </th>
                         </tr>
                     </tfoot>
@@ -267,7 +282,7 @@
                                 @php
                                     $discount_value_holder_dummy = $discount_value_holder;
                                     $less_percentage_by = $data_discount->discount_rate / 100;
-                                    
+
                                     $discount_rate_answer = $discount_value_holder * $less_percentage_by;
                                     $discount_value_holder = $discount_value_holder - $discount_value_holder_dummy * $less_percentage_by;
                                     $discount_holder[] = $discount_value_holder;
@@ -352,7 +367,7 @@
 
     $("#work_flow_inventory_save").on('submit', (function(e) {
         e.preventDefault();
-        // $('.loading').show();
+        $('.loading').show();
         $.ajax({
             url: "work_flow_inventory_save",
             type: "POST",

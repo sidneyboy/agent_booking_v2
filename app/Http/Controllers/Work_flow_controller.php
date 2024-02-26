@@ -66,12 +66,12 @@ class Work_flow_controller extends Controller
                 ->with('sku_type', $request->input('sku_type'));
         } else {
             //return $request->input();
-            $customer_principal_price = Customer_principal_price::select('id')
+            $customer_principal_price = Customer_principal_price::select('id','price_level')
                 ->where('customer_id', $request->input('customer'))
                 ->where('principal_id', $request->input('principal'))
-                ->count();
+                ->get();
 
-            if ($customer_principal_price != 0) {
+            if (count($customer_principal_price) != 0) {
                 $check_inventory_draft = Inventory_draft::select('id', 'date_delivered', 'sales_register_id')->where('customer_id', $request->input('customer'))
                     ->where('principal_id', $request->input('principal'))
                     ->where('sku_type', $request->input('sku_type'))
@@ -82,7 +82,7 @@ class Work_flow_controller extends Controller
                     foreach ($check_inventory_draft->inventory_draft_details as $key => $data) {
                         $registered_inventory[] = $data->inventory_id;
                     }
-
+                    
                     $sales_order_inventory =  Inventory::select('sku_type', 'description', 'sku_code', 'id', 'sku_code')
                         ->where('principal_id', $request->input('principal'))
                         ->where('sku_type', $request->input('sku_type'))
@@ -92,11 +92,12 @@ class Work_flow_controller extends Controller
                     return view('work_flow_proceed_to_pre_inventory_draft', [
                         'check_inventory_draft' => $check_inventory_draft,
                         'sales_order_inventory' => $sales_order_inventory,
+                        'customer_principal_price' => $customer_principal_price,
                     ])->with('principal_id', $request->input('principal'))
                         ->with('sku_type', $request->input('sku_type'))
                         ->with('customer_id', $request->input('customer'));
                 } else {
-                    $sales_order_inventory =  Inventory::select('sku_type', 'description', 'sku_code', 'id', 'sku_code')
+                    $sales_order_inventory =  Inventory::select('sku_type', 'description', 'sku_code', 'id', 'sku_code','price_1','price_2','price_3','price_4')
                         ->where('principal_id', $request->input('principal'))
                         ->where('sku_type', $request->input('sku_type'))
                         // ->whereNotIn('id', $registered_inventory)
@@ -105,6 +106,7 @@ class Work_flow_controller extends Controller
                     return view('work_flow_proceed_to_pre_inventory_draft_data', [
                         'check_inventory_draft' => $check_inventory_draft,
                         'sales_order_inventory' => $sales_order_inventory,
+                        'customer_principal_price' => $customer_principal_price[0]->price_level,
                     ])->with('principal_id', $request->input('principal'))
                         ->with('sku_type', $request->input('sku_type'))
                         ->with('customer_id', $request->input('customer'));
@@ -189,16 +191,18 @@ class Work_flow_controller extends Controller
         $inventory = Inventory::whereIn('id', array_keys($new_sales_order_inventory_quantity))->get();
 
         $bad_order = Bad_order::select('pcm_number')->orderBy('id', 'desc')->first();
-        $customer = Customer::select('store_name','location_id')->find($request->input('customer_id'));
+        $customer = Customer::select('store_name', 'location_id')->find($request->input('customer_id'));
         $agent_user = Agent_user::first();
+
+        $principal = Principal::select('principal')->find($request->input('principal_id'));
 
         if ($bad_order != "") {
             $bad_order_explode = explode('-', $bad_order->pcm_number);
             $bo_series = $bad_order_explode[5];
 
-            $bo_pcm = "PCM-BO-" .  mb_substr($customer->location->location, 0, 3) . "-" . $customer->store_name . "-" . $agent_user->agent_id . "-" . str_pad($bo_series + 1, 4, 0, STR_PAD_LEFT);
+            $bo_pcm = "PCM-BO-" . $principal->principal . "-" .  mb_substr($customer->location->location, 0, 3) . "-" . $customer->store_name . "-" . $agent_user->agent_id . "-" . str_pad($bo_series + 1, 4, 0, STR_PAD_LEFT);
         } else {
-            $bo_pcm = "PCM-BO-" .  mb_substr($customer->location->location, 0, 3) . "-" . $customer->store_name . "-" . $agent_user->agent_id . "-0001";
+            $bo_pcm = "PCM-BO-" . $principal->principal . "-" .  mb_substr($customer->location->location, 0, 3) . "-" . $customer->store_name . "-" . $agent_user->agent_id . "-0001";
         }
 
         $rgs = Return_good_stock::select('pcm_number')->orderBy('id', 'desc')->first();
@@ -207,9 +211,9 @@ class Work_flow_controller extends Controller
             $rgs_explode = explode('-', $rgs->pcm_number);
             $rgs_series = $rgs_explode[5];
 
-            $rgs_pcm =  "PCM-RGS-" .  mb_substr($customer->location->location, 0, 3) . "-" . $customer->store_name . "-" . $agent_user->agent_id . "-" . str_pad($rgs_series + 1, 4, 0, STR_PAD_LEFT);
+            $rgs_pcm =  "PCM-RGS-" . $principal->principal . "-" .  mb_substr($customer->location->location, 0, 3) . "-" . $customer->store_name . "-" . $agent_user->agent_id . "-" . str_pad($rgs_series + 1, 4, 0, STR_PAD_LEFT);
         } else {
-            $rgs_pcm = "PCM-RGS-" .  mb_substr($customer->location->location, 0, 3) . "-" . $customer->store_name . "-" . $agent_user->agent_id . "-0001";
+            $rgs_pcm = "PCM-RGS-" . $principal->principal . "-" .  mb_substr($customer->location->location, 0, 3) . "-" . $customer->store_name . "-" . $agent_user->agent_id . "-0001";
         }
 
 
@@ -269,7 +273,7 @@ class Work_flow_controller extends Controller
                     'bo' => $current_bo[$data],
                     'rgs' => $current_rgs[$data],
                     'delivered_quantity' => 0,
-                    'unit_price' => 0,
+                    'unit_price' => $request->input('current_inventory_unit_price')[$data],
                     'sku_type' => $request->input('sku_type'),
                 ]);
 
@@ -300,18 +304,20 @@ class Work_flow_controller extends Controller
 
             $sales_order_data = Sales_order::select('sales_order_number')->latest()->first();
 
+            $principal = Principal::select('principal')->find($request->input('principal_id'));
+
             if ($sales_order_data != "") {
                 $var_explode = explode('-', $sales_order_data->sales_order_number);
                 $year_and_month = $var_explode[3] . "-" . $var_explode[4];
                 $series = $var_explode[5];
 
                 if ($date_receipt != $year_and_month) {
-                    $sales_order_number = "SO-" .   $customer_principal_price->customer->store_name  . "-" . $agent_user->agent_id . "-" . $date_receipt  . "-0001";
+                    $sales_order_number = "SO-" .  $principal->principal . "-" . $customer_principal_price->customer->store_name  . "-" . $agent_user->agent_id . "-" . $date_receipt  . "-0001";
                 } else {
-                    $sales_order_number = "SO-" .  $customer_principal_price->customer->store_name . "-" . $agent_user->agent_id . "-" . $date_receipt . "-" . str_pad($series + 1, 4, 0, STR_PAD_LEFT);
+                    $sales_order_number = "SO-" . $principal->principal . "-" .  $customer_principal_price->customer->store_name . "-" . $agent_user->agent_id . "-" . $date_receipt . "-" . str_pad($series + 1, 4, 0, STR_PAD_LEFT);
                 }
             } else {
-                $sales_order_number = "SO-" .  $customer_principal_price->customer->store_name . "-" . $agent_user->agent_id . "-" . $date_receipt  . "-0001";
+                $sales_order_number = "SO-" . $principal->principal . "-" .  $customer_principal_price->customer->store_name . "-" . $agent_user->agent_id . "-" . $date_receipt  . "-0001";
             }
 
             $inventory_data = Inventory::select(

@@ -22,6 +22,9 @@ class Collection extends Model
         'remarks',
         'total_bo',
         'or_number',
+        'total_rgs',
+        'date',
+        'time',
     ];
 
     public function customer()

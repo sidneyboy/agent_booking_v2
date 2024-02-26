@@ -36,6 +36,8 @@
                                 value="{{ $data->inventory->description }}">
                             <input type="hidden" name="current_inventory_unit_price[{{ $data->inventory_id }}]"
                                 value="{{ $data->unit_price }}">
+{{-- 
+                            {{ $data->unit_price }} --}}
                         </td>
                         <td>
                             <input style="width:100px;text-align:center;" name="current_rgs[{{ $data->inventory_id }}]"

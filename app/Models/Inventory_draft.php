@@ -22,6 +22,7 @@ class Inventory_draft extends Model
     {
         return $this->hasMany('App\Models\Inventory_draft_details', 'inventory_draft_id');
     }
+    
 
     public function sales_register()
     {
