@@ -27,6 +27,7 @@ use App\Models\Inventory_draft_details;
 
 use App\Models\Customer_principal_code;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class Work_flow_controller extends Controller
 {
@@ -49,7 +50,7 @@ class Work_flow_controller extends Controller
 
     public function work_flow_show_inventory(Request $request)
     {
-        //return $request->input();
+        //==return $request->input();
         if ($request->input('customer') == 'NEW CUSTOMER') {
             $agent_user = Agent_user::first();
             $location = location::select('id', 'location')->get();
@@ -66,23 +67,47 @@ class Work_flow_controller extends Controller
                 ->with('sku_type', $request->input('sku_type'));
         } else {
             //return $request->input();
-            $customer_principal_price = Customer_principal_price::select('id','price_level')
+            $customer_principal_price = Customer_principal_price::select('id', 'price_level')
                 ->where('customer_id', $request->input('customer'))
                 ->where('principal_id', $request->input('principal'))
                 ->get();
 
             if (count($customer_principal_price) != 0) {
-                $check_inventory_draft = Inventory_draft::select('id', 'date_delivered', 'sales_register_id')->where('customer_id', $request->input('customer'))
+                $sales_register = Sales_register::select('id', 'date_delivered')
+                    ->where('customer_id', $request->input('customer'))
+                    ->where('principal_id', $request->input('principal'))
+                    ->orderBy('id', 'desc')->first();
+
+                $check_inventory_draft = Inventory_draft::select('id', 'sales_register_id')->where('customer_id', $request->input('customer'))
                     ->where('principal_id', $request->input('principal'))
                     ->where('sku_type', $request->input('sku_type'))
                     ->where('status', null)
                     ->first();
 
-                if ($check_inventory_draft) {
+                if ($sales_register) {
+                    foreach ($sales_register->sales_register_details as $key => $data) {
+                        $registered_inventory[] = $data->inventory_id;
+                    }
+
+                    $sales_order_inventory =  Inventory::select('sku_type', 'description', 'sku_code', 'id', 'sku_code')
+                        ->where('principal_id', $request->input('principal'))
+                        ->where('sku_type', $request->input('sku_type'))
+                        ->whereNotIn('id', $registered_inventory)
+                        ->get();
+
+                    return view('work_flow_proceed_to_pre_inventory_draft_with_sales_register', [
+                        'check_inventory_draft' => $sales_register,
+                        'sales_order_inventory' => $sales_order_inventory,
+                        'customer_principal_price' => $customer_principal_price,
+                    ])->with('principal_id', $request->input('principal'))
+                        ->with('sku_type', $request->input('sku_type'))
+                        ->with('customer_id', $request->input('customer'))
+                        ->with('date_delivered', $sales_register->date_delivered);
+                } elseif ($check_inventory_draft) {
                     foreach ($check_inventory_draft->inventory_draft_details as $key => $data) {
                         $registered_inventory[] = $data->inventory_id;
                     }
-                    
+
                     $sales_order_inventory =  Inventory::select('sku_type', 'description', 'sku_code', 'id', 'sku_code')
                         ->where('principal_id', $request->input('principal'))
                         ->where('sku_type', $request->input('sku_type'))
@@ -95,9 +120,10 @@ class Work_flow_controller extends Controller
                         'customer_principal_price' => $customer_principal_price,
                     ])->with('principal_id', $request->input('principal'))
                         ->with('sku_type', $request->input('sku_type'))
-                        ->with('customer_id', $request->input('customer'));
+                        ->with('customer_id', $request->input('customer'))
+                        ->with('date_delivered', $sales_register->date_delivered);
                 } else {
-                    $sales_order_inventory =  Inventory::select('sku_type', 'description', 'sku_code', 'id', 'sku_code','price_1','price_2','price_3','price_4')
+                    $sales_order_inventory =  Inventory::select('sku_type', 'description', 'sku_code', 'id', 'sku_code', 'price_1', 'price_2', 'price_3', 'price_4')
                         ->where('principal_id', $request->input('principal'))
                         ->where('sku_type', $request->input('sku_type'))
                         // ->whereNotIn('id', $registered_inventory)
@@ -119,8 +145,11 @@ class Work_flow_controller extends Controller
 
     public function work_flow_suggested_sales_order_data(Request $request)
     {
-        date_default_timezone_set('Asia/Manila');
-        $date = date('Y-m-d');
+        $curdate = DB::select('SELECT CURDATE()');
+
+        // $curtime = DB::select('SELECT CURTIME()');
+        // $curtime[0]->{'CURTIME()'},
+
 
         $new_sales_order_inventory_quantity = array_filter($request->input('new_sales_order_inventory_quantity'));
 
@@ -142,7 +171,7 @@ class Work_flow_controller extends Controller
             ->with('principal_id', $request->input('principal_id'))
             ->with('customer_id', $request->input('customer_id'))
             ->with('sku_type', $request->input('sku_type'))
-            ->with('date', $date);
+            ->with('date', $curdate[0]->{'CURDATE()'});
     }
 
     public function work_flow_check_customer_sales_order_status(Request $request)
@@ -181,14 +210,23 @@ class Work_flow_controller extends Controller
     public function work_flow_suggested_sales_order(Request $request)
     {
         //return $request->input();
-        date_default_timezone_set('Asia/Manila');
-        $date = date('Y-m-d');
-        $time = date('h:i:s a');
-        $date_receipt = date('Y-m');
+        $curdate = DB::select('SELECT CURDATE()');
 
-        $new_sales_order_inventory_quantity = array_filter($request->input('new_sales_order_inventory_quantity'));
+        // $curtime = DB::select('SELECT CURTIME()');
+        // $curtime[0]->{'CURTIME()'},
 
-        $inventory = Inventory::whereIn('id', array_keys($new_sales_order_inventory_quantity))->get();
+        $new_sales_order_inventory_quantity_checker = $request->input('new_sales_order_inventory_quantity');
+        if ($new_sales_order_inventory_quantity_checker) {
+            return 'naa';
+            $new_sales_order_inventory_quantity = array_filter($request->input('new_sales_order_inventory_quantity'));
+            $inventory = Inventory::whereIn('id', array_keys($new_sales_order_inventory_quantity))->get();
+        } else {
+            $new_sales_order_inventory_quantity = 0;
+            $inventory = 0;
+        }
+
+
+
 
         $bad_order = Bad_order::select('pcm_number')->orderBy('id', 'desc')->first();
         $customer = Customer::select('store_name', 'location_id')->find($request->input('customer_id'));
@@ -218,8 +256,6 @@ class Work_flow_controller extends Controller
 
 
 
-
-
         return view('work_flow_suggested_sales_order', [
             'inventory' => $inventory,
             'bo_pcm' => $bo_pcm,
@@ -241,7 +277,7 @@ class Work_flow_controller extends Controller
             ->with('principal_id', $request->input('principal_id'))
             ->with('customer_id', $request->input('customer_id'))
             ->with('sku_type', $request->input('sku_type'))
-            ->with('date', $date);
+            ->with('date', $curdate[0]->{'CURDATE()'});
     }
 
     public function work_flow_inventory_save_as_draft(Request $request)

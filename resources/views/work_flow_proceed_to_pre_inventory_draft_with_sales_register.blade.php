@@ -13,7 +13,7 @@
         <table class="table table-sm table-bordered table-striped table_suggested_so" style="font-size:13px;width:100%;">
             <thead>
                 <tr>
-                    <th colspan="4" style="color:blue;">CUSTOMER CURRENT INVENTORY DRAFT</th>
+                    <th colspan="4" style="color:blue;">CUSTOMER CURRENT INVENTORY DRAFT W/ SR</th>
                 </tr>
                 <tr>
                     <th>Desc</th>
@@ -23,7 +23,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($check_inventory_draft->inventory_draft_details as $data)
+                @foreach ($check_inventory_draft->sales_register_details as $data)
                     <tr>
                         <td>
                             <b style="color:blue;">{{ $data->inventory->sku_code }}</b><br />
@@ -36,7 +36,7 @@
                                 value="{{ $data->inventory->description }}">
                             <input type="hidden" name="current_inventory_unit_price[{{ $data->inventory_id }}]"
                                 value="{{ $data->unit_price }}">
-{{-- 
+                            {{-- 
                             {{ $data->unit_price }} --}}
                         </td>
                         <td>
@@ -101,11 +101,11 @@
     <input type="hidden" value="{{ $sku_type }}" name="sku_type">
     <input type="hidden" value="{{ $sales_register_id }}" name="sales_register_id"> --}}
 
-    <input type="hidden" value="{{ $customer_id }}" name="customer_id">
-    <input type="hidden" value="{{ $principal_id }}" name="principal_id">
-    <input type="hidden" value="{{ $sku_type }}" name="sku_type">
-    <input type="hidden" value="{{ $date_delivered }}" name="date_delivered">
-    <input type="hidden" value="{{ $check_inventory_draft->id }}" name="sales_register_id">
+    <input type="text" value="{{ $customer_id }}" name="customer_id">
+    <input type="text" value="{{ $principal_id }}" name="principal_id">
+    <input type="text" value="{{ $sku_type }}" name="sku_type">
+    <input type="text" value="{{ $date_delivered }}" name="date_delivered">
+    <input type="text" value="{{ $check_inventory_draft->id }}" name="sales_register_id">
     <button type="submit" class="btn btn-block btn-info">PROCEED</button>
 </form>
 

@@ -55,7 +55,8 @@
                                     {{ number_format($current_inventory_unit_price[$rgs_data], 2, '.', ',') }}</td>
                                 <td style="text-align: right">
                                     @php
-                                        $rgs_sub_total = $current_inventory_unit_price[$rgs_data] * $current_rgs[$rgs_data];
+                                        $rgs_sub_total =
+                                            $current_inventory_unit_price[$rgs_data] * $current_rgs[$rgs_data];
                                         $rgs_total_price[] = $rgs_sub_total;
                                         echo number_format($rgs_sub_total, 2, '.', ',');
                                     @endphp
@@ -152,7 +153,8 @@
                     <th>Sales/Offtake</th>
                     <th>No. of Days</th>
                     <th>Average Daily Sales</th>
-                    <th>Current Bo</th>
+                    <th>BO</th>
+                    <th>RGS</th>
                     <th>Suggested Sales Order</th>
                     <th>Final SO</th>
                 </tr>
@@ -173,7 +175,9 @@
                         </td>
                         <td style="text-align: right">
                             @php
-                                $sales_off_take = $prev_delivered_inventory[$current_inventory_data] - $current_remaining_inventory[$current_inventory_data];
+                                $sales_off_take =
+                                    $prev_delivered_inventory[$current_inventory_data] -
+                                    $current_remaining_inventory[$current_inventory_data];
                                 echo $sales_off_take;
                             @endphp
                         </td>
@@ -182,20 +186,33 @@
                                 $diff = abs(strtotime($date_delivered) - strtotime($date));
                                 $years = floor($diff / (365 * 60 * 60 * 24));
                                 $months = floor(($diff - $years * 365 * 60 * 60 * 24) / (30 * 60 * 60 * 24));
-                                echo $number_of_days = floor(($diff - $years * 365 * 60 * 60 * 24 - $months * 30 * 60 * 60 * 24) / (60 * 60 * 24));
+                                echo $number_of_days = floor(
+                                    ($diff - $years * 365 * 60 * 60 * 24 - $months * 30 * 60 * 60 * 24) /
+                                        (60 * 60 * 24),
+                                );
                             @endphp
                         </td>
                         <td style="text-align: right">
                             @php
-                                echo $average_daily_sales = round($sales_off_take / $number_of_days);
+                                if ($number_of_days == 0) {
+                                    echo $average_daily_sales = round($sales_off_take);
+                                } else {
+                                    echo $average_daily_sales = round($sales_off_take / $number_of_days);
+                                }
                             @endphp
                         </td>
                         <td style="text-align: right">
                             {{ $current_bo[$current_inventory_data] }}
                         </td>
                         <td style="text-align: right">
+                            {{ $current_rgs[$current_inventory_data] }}
+                        </td>
+                        <td style="text-align: right">
                             @php
-                                $suggested_sales_order = $average_daily_sales * ($number_of_days + 5) + $current_bo[$current_inventory_data];
+                                $suggested_sales_order =
+                                    $average_daily_sales * ($number_of_days + 5) +
+                                    $current_bo[$current_inventory_data] +
+                                    $current_rgs[$current_inventory_data];
                                 echo $suggested_sales_order;
                             @endphp
                         </td>
@@ -215,36 +232,38 @@
                         </td>
                     </tr>
                 @endforeach
-                @foreach ($inventory as $inventory_data)
-                    <tr>
-                        <td>
-                            <b style="color:blue">{{ $inventory_data->sku_code }}</b><br />
-                            {{ $inventory_data->description }}<br />
-                            <b style="color:green">{{ $sku_type }}</b>
-                        </td>
-                        <td style="text-align:right">0</td>
-                        <td style="text-align:right">0</td>
-                        <td style="text-align:right">0</td>
-                        <td style="text-align:right">0</td>
-                        <td style="text-align:right">0</td>
-                        <td style="text-align:right">0</td>
-                        <td style="text-align:right">0</td>
-                        <td>
-                            <input type="hidden"
-                                name="sales_order_final_inventory_description[{{ $inventory_data->id }}]"
-                                value="{{ $inventory_data->description }}">
-                            <input type="hidden"
-                                name="sales_order_final_inventory_sku_code[{{ $inventory_data->id }}]"
-                                value="{{ $inventory_data->sku_code }}">
-                            <input type="hidden" name="sales_order_final_inventory_id[]"
-                                value="{{ $inventory_data->id }}">
-                            <input type="number" style="width:100px;text-align:center;"
-                                name="sales_order_final_quantity[{{ $inventory_data->id }}]" min="0"
-                                value="{{ $new_sales_order_inventory_quantity[$inventory_data->id] }}"
-                                class="form-control form-control-sm" required>
-                        </td>
-                    </tr>
-                @endforeach
+                @if ($inventory != 0)
+                    @foreach ($inventory as $inventory_data)
+                        <tr>
+                            <td>
+                                <b style="color:blue">{{ $inventory_data->sku_code }}</b><br />
+                                {{ $inventory_data->description }}<br />
+                                <b style="color:green">{{ $sku_type }}</b>
+                            </td>
+                            <td style="text-align:right">0</td>
+                            <td style="text-align:right">0</td>
+                            <td style="text-align:right">0</td>
+                            <td style="text-align:right">0</td>
+                            <td style="text-align:right">0</td>
+                            <td style="text-align:right">0</td>
+                            <td style="text-align:right">0</td>
+                            <td>
+                                <input type="hidden"
+                                    name="sales_order_final_inventory_description[{{ $inventory_data->id }}]"
+                                    value="{{ $inventory_data->description }}">
+                                <input type="hidden"
+                                    name="sales_order_final_inventory_sku_code[{{ $inventory_data->id }}]"
+                                    value="{{ $inventory_data->sku_code }}">
+                                <input type="hidden" name="sales_order_final_inventory_id[]"
+                                    value="{{ $inventory_data->id }}">
+                                <input type="number" style="width:100px;text-align:center;"
+                                    name="sales_order_final_quantity[{{ $inventory_data->id }}]" min="0"
+                                    value="{{ $new_sales_order_inventory_quantity[$inventory_data->id] }}"
+                                    class="form-control form-control-sm" required>
+                            </td>
+                        </tr>
+                    @endforeach
+                @endif
             </tbody>
         </table>
     </div>

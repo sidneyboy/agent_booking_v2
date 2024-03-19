@@ -92,7 +92,7 @@
 <script>
     $("#work_flow_suggested_sales_order").on('submit', (function(e) {
         e.preventDefault();
-        $('.loading').show();
+        // $('.loading').show();
         Swal.fire({
             title: 'Save as draft ?',
             showDenyButton: true,
@@ -101,6 +101,7 @@
             denyButtonText: `Don't save`,
         }).then((result) => {
             if (result.isConfirmed) {
+                $('.loading').show();
                 $.ajax({
                     url: "work_flow_inventory_save_as_draft",
                     type: "POST",

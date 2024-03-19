@@ -194,6 +194,14 @@
                         $('#work_flow_show_inventory_page').html(data);
                     }
                 },
+                error: function(error) {
+                    $('.loading').hide();
+                    Swal.fire(
+                        'Cannot Proceed',
+                        'Please Contact IT Support',
+                        'error'
+                    )
+                }
             });
         }));
     </script>
